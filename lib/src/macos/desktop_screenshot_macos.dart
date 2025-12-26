@@ -22,6 +22,10 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
 
   @override
   Future<List<Monitor>> getAvailableMonitors() async {
+    if (!hasPermission()) {
+      throw StateError('Screen capture permission not granted');
+    }
+
     final completer = Completer<(List<SCDisplay>, objc.NSArray)>();
 
     SCShareableContent.getShareableContentWithCompletionHandler(
@@ -30,26 +34,19 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
         error,
       ) {
         if (error != null) {
-          print(error.localizedDescription.toDartString());
-          completer.completeError(error);
+          completer.completeError(
+            Exception(
+              'Failed to get shareable content: ${error.localizedDescription.toDartString()}',
+            ),
+          );
           return;
         }
-        print(
-          scDisplays!.windows
-              .toDartList()
-              .cast<SCWindow>()
-              .map((e) => e.description.toDartString())
-              .toList(),
-        );
-        print(
-          scDisplays!.applications
-              .toDartList()
-              .cast<SCRunningApplication>()
-              .map((e) => e.description.toDartString())
-              .toList(),
-        );
+        if (scDisplays == null) {
+          completer.completeError(Exception('Shareable content is null'));
+          return;
+        }
         completer.complete((
-          scDisplays!.displays.toDartList().cast<SCDisplay>(),
+          scDisplays.displays.toDartList().cast<SCDisplay>(),
           scDisplays.applications,
         ));
       }, keepIsolateAlive: true),
@@ -68,16 +65,15 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
 
   @override
   Future<Uint8List> takeScreenshot(Monitor monitor) async {
+    if (!hasPermission()) {
+      throw StateError('Screen capture permission not granted');
+    }
+
     if (monitor is! _MacosMonitor) {
       throw ArgumentError('Invalid monitor type');
     }
 
     final display = monitor.display;
-    final frame = display.frame;
-    print(
-      'Display: ${display.width}x${display.height}, Frame: (${frame.origin.x}, ${frame.origin.y}) ${frame.size.width}x${frame.size.height}',
-    );
-
     final filter = SCContentFilter.alloc().initWithDisplay$2(
       display,
       includingApplications: monitor.applications,
@@ -98,18 +94,24 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
         error,
       ) {
         if (error != null) {
-          print('Capture error: ${error.localizedDescription.toDartString()}');
-          print(error.debugDescription.toDartString());
-          print(error.code);
-          completer.completeError(error);
+          completer.completeError(
+            Exception(
+              'Capture error: ${error.localizedDescription.toDartString()}',
+            ),
+          );
           return;
         }
         if (screenshotOutput == null) {
+          completer.completeError(Exception('Captured output is null'));
+          return;
+        }
+        final sdrImage = screenshotOutput.sdrImage;
+        if (sdrImage == ffi.nullptr) {
           completer.completeError(Exception('Captured image is null'));
           return;
         }
         try {
-          final pngData = _convertCGImageToPng(screenshotOutput.sdrImage);
+          final pngData = _convertCGImageToPng(sdrImage);
           completer.complete(pngData);
         } catch (e) {
           completer.completeError(e);
@@ -121,11 +123,12 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
   }
 
   Uint8List _convertCGImageToPng(ffi.Pointer<CGImage> cgImage) {
-    if (cgImage == ffi.nullptr) throw Exception('cgImage is null');
-    final w = CGImageGetWidth(cgImage);
-    final h = CGImageGetHeight(cgImage);
-    print('Starting _convertCGImageToPng, cgImage size: ${w}x${h}');
+    if (cgImage == ffi.nullptr) throw ArgumentError('cgImage is null');
+
     final mutableData = CFDataCreateMutable(ffi.nullptr, 0);
+    if (mutableData == ffi.nullptr) {
+      throw Exception('Failed to create CFMutableData');
+    }
 
     final destination = CGImageDestinationCreateWithData(
       mutableData,
@@ -135,24 +138,21 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
     );
 
     if (destination == ffi.nullptr) {
+      CFRelease(mutableData.cast());
       throw Exception('Failed to create CGImageDestination');
     }
-    print('CGImageDestination created');
 
     try {
       CGImageDestinationAddImage(destination, cgImage, ffi.nullptr);
-      print('Added image to destination');
       if (!CGImageDestinationFinalize(destination)) {
         throw Exception('Failed to finalize CGImageDestination');
       }
-      print('Finalized destination');
 
       final length = CFDataGetLength(mutableData);
-      print('Data length: $length');
       final bytes = CFDataGetBytePtr(mutableData);
 
-      if (bytes == ffi.nullptr) {
-        throw Exception('Failed to get bytes from NSData');
+      if (bytes == ffi.nullptr && length > 0) {
+        throw Exception('Failed to get bytes from CFData');
       }
 
       return bytes.cast<Uint8>().asTypedList(length).sublist(0);
