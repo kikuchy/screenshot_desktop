@@ -27,7 +27,7 @@ void main(List<String> args) async {
     }
 
     print("input: $input");
-    const supportedOSs = {OS.iOS, OS.macOS};
+    const supportedOSs = {OS.macOS};
     final codeConfig = input.config.code;
     final os = codeConfig.targetOS;
     if (!supportedOSs.contains(os)) {
