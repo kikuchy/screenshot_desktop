@@ -41,6 +41,30 @@ external bool CGPreflightScreenCaptureAccess();
 external bool CGRequestScreenCaptureAccess();
 
 @ffi.Native<
+  ffi.Int32 Function(
+    ffi.Uint32,
+    ffi.Pointer<ffi.Uint32>,
+    ffi.Pointer<ffi.Uint32>,
+  )
+>(symbol: 'CGGetActiveDisplayList')
+external int _CGGetActiveDisplayList(
+  int maxDisplays,
+  ffi.Pointer<ffi.Uint32> activeDisplays,
+  ffi.Pointer<ffi.Uint32> displayCount,
+);
+
+CGError CGGetActiveDisplayList(
+  int maxDisplays,
+  ffi.Pointer<ffi.Uint32> activeDisplays,
+  ffi.Pointer<ffi.Uint32> displayCount,
+) => CGError.fromValue(
+  _CGGetActiveDisplayList(maxDisplays, activeDisplays, displayCount),
+);
+
+@ffi.Native<objc.CGRect Function(ffi.Uint32)>()
+external objc.CGRect CGDisplayBounds(int display);
+
+@ffi.Native<
   ffi.Pointer<CGImageDestination> Function(
     ffi.Pointer<__CFData>,
     ffi.Pointer<objc.CFString>,
@@ -151,6 +175,38 @@ final class __CFData extends ffi.Opaque {}
 final class CGColor extends ffi.Opaque {}
 
 final class CGImage extends ffi.Opaque {}
+
+enum CGError {
+  kCGErrorSuccess(0),
+  kCGErrorFailure(1000),
+  kCGErrorIllegalArgument(1001),
+  kCGErrorInvalidConnection(1002),
+  kCGErrorInvalidContext(1003),
+  kCGErrorCannotComplete(1004),
+  kCGErrorNotImplemented(1006),
+  kCGErrorRangeCheck(1007),
+  kCGErrorTypeCheck(1008),
+  kCGErrorInvalidOperation(1010),
+  kCGErrorNoneAvailable(1011);
+
+  final int value;
+  const CGError(this.value);
+
+  static CGError fromValue(int value) => switch (value) {
+    0 => kCGErrorSuccess,
+    1000 => kCGErrorFailure,
+    1001 => kCGErrorIllegalArgument,
+    1002 => kCGErrorInvalidConnection,
+    1003 => kCGErrorInvalidContext,
+    1004 => kCGErrorCannotComplete,
+    1006 => kCGErrorNotImplemented,
+    1007 => kCGErrorRangeCheck,
+    1008 => kCGErrorTypeCheck,
+    1010 => kCGErrorInvalidOperation,
+    1011 => kCGErrorNoneAvailable,
+    _ => throw ArgumentError('Unknown value for CGError: $value'),
+  };
+}
 
 final class CGImageDestination extends ffi.Opaque {}
 

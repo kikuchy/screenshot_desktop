@@ -48,10 +48,13 @@ final config = FfiGenerator(
     objectiveCFile: Uri.file('src/bindings.g.m'),
   ),
   functions: Functions.includeSet({
+    // Core Graphics
     'CGPreflightScreenCaptureAccess',
     'CGRequestScreenCaptureAccess',
+    'CGGetActiveDisplayList',
+    'CGDisplayBounds',
     'CFRelease',
-    // ImageIO functions
+    // ImageIO
     'CGImageDestinationCreateWithData',
     'CGImageDestinationAddImage',
     'CGImageDestinationFinalize',

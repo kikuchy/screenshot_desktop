@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ffi';
 import 'dart:ffi' as ffi;
 import 'dart:typed_data';
+import 'package:ffi/ffi.dart';
 import 'package:objective_c/objective_c.dart' as objc;
 import '../desktop_screenshot_interface.dart';
 import '../monitor.dart';
@@ -26,41 +27,26 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
       throw StateError('Screen capture permission not granted');
     }
 
-    final completer = Completer<(List<SCDisplay>, objc.NSArray)>();
+    return using((arena) {
+      final displayCount = arena.allocate<ffi.Uint32>(1);
+      final displays = arena.allocate<ffi.Uint32>(100);
+      CGGetActiveDisplayList(100, displays, displayCount);
+      final count = displayCount.value;
 
-    SCShareableContent.getShareableContentWithCompletionHandler(
-      ObjCBlock_ffiVoid_SCShareableContent_NSError.listener((
-        scDisplays,
-        error,
-      ) {
-        if (error != null) {
-          completer.completeError(
-            Exception(
-              'Failed to get shareable content: ${error.localizedDescription.toDartString()}',
-            ),
-          );
-          return;
-        }
-        if (scDisplays == null) {
-          completer.completeError(Exception('Shareable content is null'));
-          return;
-        }
-        completer.complete((
-          scDisplays.displays.toDartList().cast<SCDisplay>(),
-          scDisplays.applications,
-        ));
-      }, keepIsolateAlive: true),
-    );
-    final (displays, applications) = await completer.future;
-    return displays
-        .map(
-          (display) => _MacosMonitor(
-            display: display,
-            applications: applications,
-            name: display.description.toDartString(),
-          ),
-        )
-        .toList();
+      final monitors = <Monitor>[];
+      for (int i = 0; i < count; i++) {
+        final displayId = displays[i];
+        final displayBounds = CGDisplayBounds(displayId);
+        final monitor = _MacosMonitor(
+          displayId: displayId,
+          name: "Monitor $i",
+          width: displayBounds.size.width.toInt(),
+          height: displayBounds.size.height.toInt(),
+        );
+        monitors.add(monitor);
+      }
+      return monitors;
+    });
   }
 
   @override
@@ -73,14 +59,59 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
       throw ArgumentError('Invalid monitor type');
     }
 
-    final display = monitor.display;
+    final (display, applications) = await _getLatestShareableDisplayAndContent(
+      monitor.displayId,
+    );
+    return await _takeScreenshot(display, applications);
+  }
+
+  Future<(SCDisplay, objc.NSArray)> _getLatestShareableDisplayAndContent(
+    int displayId,
+  ) {
+    final displayCompleter = Completer<(SCDisplay, objc.NSArray)>();
+
+    SCShareableContent.getShareableContentWithCompletionHandler(
+      ObjCBlock_ffiVoid_SCShareableContent_NSError.listener((
+        scDisplays,
+        error,
+      ) {
+        if (error != null) {
+          displayCompleter.completeError(
+            Exception(
+              'Failed to get shareable content: ${error.localizedDescription.toDartString()}',
+            ),
+          );
+          return;
+        }
+        if (scDisplays == null) {
+          displayCompleter.completeError(
+            Exception('Shareable content is null'),
+          );
+          return;
+        }
+        displayCompleter.complete((
+          scDisplays.displays.toDartList().cast<SCDisplay>().firstWhere(
+            (display) => display.displayID == displayId,
+          ),
+          scDisplays.applications,
+        ));
+      }, keepIsolateAlive: true),
+    );
+
+    return displayCompleter.future;
+  }
+
+  Future<Uint8List> _takeScreenshot(
+    SCDisplay display,
+    objc.NSArray applications,
+  ) {
     final filter = SCContentFilter.alloc().initWithDisplay$2(
       display,
-      includingApplications: monitor.applications,
+      includingApplications: applications,
       exceptingWindows: objc.NSArray.alloc().init(),
     );
 
-    final completer = Completer<Uint8List>();
+    final pixelCompleter = Completer<Uint8List>();
 
     final config = SCScreenshotConfiguration.alloc().init();
     config.contentType = UTTypePNG;
@@ -94,7 +125,7 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
         error,
       ) {
         if (error != null) {
-          completer.completeError(
+          pixelCompleter.completeError(
             Exception(
               'Capture error: ${error.localizedDescription.toDartString()}',
             ),
@@ -102,24 +133,24 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
           return;
         }
         if (screenshotOutput == null) {
-          completer.completeError(Exception('Captured output is null'));
+          pixelCompleter.completeError(Exception('Captured output is null'));
           return;
         }
         final sdrImage = screenshotOutput.sdrImage;
         if (sdrImage == ffi.nullptr) {
-          completer.completeError(Exception('Captured image is null'));
+          pixelCompleter.completeError(Exception('Captured image is null'));
           return;
         }
         try {
           final pngData = _convertCGImageToPng(sdrImage);
-          completer.complete(pngData);
+          pixelCompleter.complete(pngData);
         } catch (e) {
-          completer.completeError(e);
+          pixelCompleter.completeError(e);
         }
       }, keepIsolateAlive: true),
     );
 
-    return completer.future;
+    return pixelCompleter.future;
   }
 
   Uint8List _convertCGImageToPng(ffi.Pointer<CGImage> cgImage) {
@@ -164,20 +195,16 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
 }
 
 class _MacosMonitor implements Monitor {
-  final SCDisplay display;
-  final objc.NSArray applications;
+  final int displayId;
   final String name;
+  final int width;
+  final int height;
   const _MacosMonitor({
-    required this.display,
-    required this.applications,
+    required this.displayId,
     required this.name,
+    required this.width,
+    required this.height,
   });
-
-  @override
-  int get width => display.width;
-
-  @override
-  int get height => display.height;
 }
 
 class _DisplayListCallback

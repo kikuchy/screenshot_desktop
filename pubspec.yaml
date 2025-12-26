@@ -12,7 +12,7 @@ dependencies:
   objective_c: ^9.2.2
   hooks: ^0.20.5
   code_assets: ^0.19.10
-  # native_toolchain_c: ^0.17.2
+  ffi: ^2.1.4
 
 dev_dependencies:
   lints: ^6.0.0
