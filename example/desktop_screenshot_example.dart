@@ -8,7 +8,15 @@ void main() async {
   final availableMonitors = await DesktopScreenshot.instance
       .getAvailableMonitors();
 
+  print('Available Monitors:');
+  for (final monitor in availableMonitors) {
+    print(' - ${monitor.name} (${monitor.width}x${monitor.height})');
+  }
+
   if (availableMonitors.isNotEmpty) {
+    print(
+      'Taking screenshot of the first monitor: ${availableMonitors.first.name}',
+    );
     final screenshot = await DesktopScreenshot.instance.takeScreenshot(
       availableMonitors.first,
     );

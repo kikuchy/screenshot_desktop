@@ -5,6 +5,7 @@
 #import <ImageIO/ImageIO.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
+#import <AppKit/AppKit.h>
 
 #if !__has_feature(objc_arc)
 #error "This file must be compiled with ARC enabled"

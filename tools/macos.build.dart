@@ -29,18 +29,22 @@ final config = FfiGenerator(
       Uri.file(
         '$macSdkPath/System/Library/Frameworks/UniformTypeIdentifiers.framework/Headers/UniformTypeIdentifiers.h',
       ),
+      Uri.file(
+        '$macSdkPath/System/Library/Frameworks/AppKit.framework/Headers/AppKit.h',
+      ),
     ],
   ),
   objectiveC: ObjectiveC(
     interfaces: Interfaces.includeSet({
+      // ScreenCaptureKit
       'SCDisplay',
       'SCScreenshotManager',
       'SCShareableContent',
       'SCContentFilter',
-      'SCWindow',
-      'SCRunningApplication',
       'SCScreenshotConfiguration',
       'SCScreenshotOutput',
+      // AppKit
+      'NSScreen',
     }),
   ),
   output: Output(
@@ -51,8 +55,6 @@ final config = FfiGenerator(
     // Core Graphics
     'CGPreflightScreenCaptureAccess',
     'CGRequestScreenCaptureAccess',
-    'CGGetActiveDisplayList',
-    'CGDisplayBounds',
     'CFRelease',
     // ImageIO
     'CGImageDestinationCreateWithData',
@@ -61,8 +63,6 @@ final config = FfiGenerator(
     'CFDataCreateMutable',
     'CFDataGetLength',
     'CFDataGetBytePtr',
-    'CGImageGetWidth',
-    'CGImageGetHeight',
   }),
   globals: Globals.includeSet({'kUTTypePNG', 'UTTypePNG'}),
   typedefs: Typedefs.includeSet({}),

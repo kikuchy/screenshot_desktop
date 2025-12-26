@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ffi';
 import 'dart:ffi' as ffi;
 import 'dart:typed_data';
-import 'package:ffi/ffi.dart';
 import 'package:objective_c/objective_c.dart' as objc;
 import '../desktop_screenshot_interface.dart';
 import '../monitor.dart';
@@ -27,26 +26,25 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
       throw StateError('Screen capture permission not granted');
     }
 
-    return using((arena) {
-      final displayCount = arena.allocate<ffi.Uint32>(1);
-      final displays = arena.allocate<ffi.Uint32>(100);
-      CGGetActiveDisplayList(100, displays, displayCount);
-      final count = displayCount.value;
+    final screens = NSScreen.getScreens();
+    final monitors = <Monitor>[];
 
-      final monitors = <Monitor>[];
-      for (int i = 0; i < count; i++) {
-        final displayId = displays[i];
-        final displayBounds = CGDisplayBounds(displayId);
-        final monitor = _MacosMonitor(
+    for (final screen in screens.toDartList().cast<NSScreen>()) {
+      final displayId = screen.CGDirectDisplayID;
+      final frame = screen.frame;
+      final name = screen.localizedName.toDartString();
+
+      monitors.add(
+        _MacosMonitor(
           displayId: displayId,
-          name: "Monitor $i",
-          width: displayBounds.size.width.toInt(),
-          height: displayBounds.size.height.toInt(),
-        );
-        monitors.add(monitor);
-      }
-      return monitors;
-    });
+          name: name,
+          width: frame.size.width.toInt(),
+          height: frame.size.height.toInt(),
+        ),
+      );
+    }
+
+    return monitors;
   }
 
   @override
@@ -205,28 +203,4 @@ class _MacosMonitor implements Monitor {
     required this.width,
     required this.height,
   });
-}
-
-class _DisplayListCallback
-    extends
-        objc.ObjCBlock<ffi.Void Function(SCShareableContent?, objc.NSError?)> {
-  final Completer<List<SCDisplay>> completer;
-  _DisplayListCallback(
-    super.ptr, {
-    required super.retain,
-    required super.release,
-    required this.completer,
-  });
-
-  void call(SCShareableContent? content, objc.NSError? error) {
-    if (error != null) {
-      completer.completeError(error);
-      return;
-    }
-    if (content == null) {
-      completer.completeError(Exception('Shareable content is null'));
-      return;
-    }
-    completer.complete(content.displays.toDartList().cast());
-  }
 }

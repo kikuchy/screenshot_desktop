@@ -28,41 +28,11 @@ external ffi.Pointer<ffi.UnsignedChar> CFDataGetBytePtr(
 @ffi.Native<ffi.Pointer<objc.CFString>>()
 external ffi.Pointer<objc.CFString> kUTTypePNG;
 
-@ffi.Native<ffi.Size Function(ffi.Pointer<CGImage>)>()
-external int CGImageGetWidth(ffi.Pointer<CGImage> image);
-
-@ffi.Native<ffi.Size Function(ffi.Pointer<CGImage>)>()
-external int CGImageGetHeight(ffi.Pointer<CGImage> image);
-
 @ffi.Native<ffi.Bool Function()>()
 external bool CGPreflightScreenCaptureAccess();
 
 @ffi.Native<ffi.Bool Function()>()
 external bool CGRequestScreenCaptureAccess();
-
-@ffi.Native<
-  ffi.Int32 Function(
-    ffi.Uint32,
-    ffi.Pointer<ffi.Uint32>,
-    ffi.Pointer<ffi.Uint32>,
-  )
->(symbol: 'CGGetActiveDisplayList')
-external int _CGGetActiveDisplayList(
-  int maxDisplays,
-  ffi.Pointer<ffi.Uint32> activeDisplays,
-  ffi.Pointer<ffi.Uint32> displayCount,
-);
-
-CGError CGGetActiveDisplayList(
-  int maxDisplays,
-  ffi.Pointer<ffi.Uint32> activeDisplays,
-  ffi.Pointer<ffi.Uint32> displayCount,
-) => CGError.fromValue(
-  _CGGetActiveDisplayList(maxDisplays, activeDisplays, displayCount),
-);
-
-@ffi.Native<objc.CGRect Function(ffi.Uint32)>()
-external objc.CGRect CGDisplayBounds(int display);
 
 @ffi.Native<
   ffi.Pointer<CGImageDestination> Function(
@@ -172,65 +142,117 @@ final class __CFDictionary extends ffi.Opaque {}
 
 final class __CFData extends ffi.Opaque {}
 
+sealed class NSAlignmentOptions {
+  static const NSAlignMinXInward = 1;
+  static const NSAlignMinYInward = 2;
+  static const NSAlignMaxXInward = 4;
+  static const NSAlignMaxYInward = 8;
+  static const NSAlignWidthInward = 16;
+  static const NSAlignHeightInward = 32;
+  static const NSAlignMinXOutward = 256;
+  static const NSAlignMinYOutward = 512;
+  static const NSAlignMaxXOutward = 1024;
+  static const NSAlignMaxYOutward = 2048;
+  static const NSAlignWidthOutward = 4096;
+  static const NSAlignHeightOutward = 8192;
+  static const NSAlignMinXNearest = 65536;
+  static const NSAlignMinYNearest = 131072;
+  static const NSAlignMaxXNearest = 262144;
+  static const NSAlignMaxYNearest = 524288;
+  static const NSAlignWidthNearest = 1048576;
+  static const NSAlignHeightNearest = 2097152;
+  static const NSAlignRectFlipped = -9223372036854775808;
+  static const NSAlignAllEdgesInward = 15;
+  static const NSAlignAllEdgesOutward = 3840;
+  static const NSAlignAllEdgesNearest = 983040;
+}
+
+enum NSWindowDepth {
+  NSWindowDepthTwentyfourBitRGB(520),
+  NSWindowDepthSixtyfourBitRGB(528),
+  NSWindowDepthOnehundredtwentyeightBitRGB(544);
+
+  final int value;
+  const NSWindowDepth(this.value);
+
+  static NSWindowDepth fromValue(int value) => switch (value) {
+    520 => NSWindowDepthTwentyfourBitRGB,
+    528 => NSWindowDepthSixtyfourBitRGB,
+    544 => NSWindowDepthOnehundredtwentyeightBitRGB,
+    _ => throw ArgumentError('Unknown value for NSWindowDepth: $value'),
+  };
+}
+
+enum NSDisplayGamut {
+  NSDisplayGamutSRGB(1),
+  NSDisplayGamutP3(2);
+
+  final int value;
+  const NSDisplayGamut(this.value);
+
+  static NSDisplayGamut fromValue(int value) => switch (value) {
+    1 => NSDisplayGamutSRGB,
+    2 => NSDisplayGamutP3,
+    _ => throw ArgumentError('Unknown value for NSDisplayGamut: $value'),
+  };
+}
+
 final class CGColor extends ffi.Opaque {}
+
+final class CGColorSpace extends ffi.Opaque {}
 
 final class CGImage extends ffi.Opaque {}
 
-enum CGError {
-  kCGErrorSuccess(0),
-  kCGErrorFailure(1000),
-  kCGErrorIllegalArgument(1001),
-  kCGErrorInvalidConnection(1002),
-  kCGErrorInvalidContext(1003),
-  kCGErrorCannotComplete(1004),
-  kCGErrorNotImplemented(1006),
-  kCGErrorRangeCheck(1007),
-  kCGErrorTypeCheck(1008),
-  kCGErrorInvalidOperation(1010),
-  kCGErrorNoneAvailable(1011);
-
-  final int value;
-  const CGError(this.value);
-
-  static CGError fromValue(int value) => switch (value) {
-    0 => kCGErrorSuccess,
-    1000 => kCGErrorFailure,
-    1001 => kCGErrorIllegalArgument,
-    1002 => kCGErrorInvalidConnection,
-    1003 => kCGErrorInvalidContext,
-    1004 => kCGErrorCannotComplete,
-    1006 => kCGErrorNotImplemented,
-    1007 => kCGErrorRangeCheck,
-    1008 => kCGErrorTypeCheck,
-    1010 => kCGErrorInvalidOperation,
-    1011 => kCGErrorNoneAvailable,
-    _ => throw ArgumentError('Unknown value for CGError: $value'),
-  };
-}
-
 final class CGImageDestination extends ffi.Opaque {}
 
-enum SCShareableContentStyle {
-  SCShareableContentStyleNone(0),
-  SCShareableContentStyleWindow(1),
-  SCShareableContentStyleDisplay(2),
-  SCShareableContentStyleApplication(3);
+enum NSColorSpaceModel {
+  NSColorSpaceModelUnknown(-1),
+  NSColorSpaceModelGray(0),
+  NSColorSpaceModelRGB(1),
+  NSColorSpaceModelCMYK(2),
+  NSColorSpaceModelLAB(3),
+  NSColorSpaceModelDeviceN(4),
+  NSColorSpaceModelIndexed(5),
+  NSColorSpaceModelPatterned(6);
 
   final int value;
-  const SCShareableContentStyle(this.value);
+  const NSColorSpaceModel(this.value);
 
-  static SCShareableContentStyle fromValue(int value) => switch (value) {
-    0 => SCShareableContentStyleNone,
-    1 => SCShareableContentStyleWindow,
-    2 => SCShareableContentStyleDisplay,
-    3 => SCShareableContentStyleApplication,
-    _ => throw ArgumentError(
-      'Unknown value for SCShareableContentStyle: $value',
-    ),
+  static NSColorSpaceModel fromValue(int value) => switch (value) {
+    -1 => NSColorSpaceModelUnknown,
+    0 => NSColorSpaceModelGray,
+    1 => NSColorSpaceModelRGB,
+    2 => NSColorSpaceModelCMYK,
+    3 => NSColorSpaceModelLAB,
+    4 => NSColorSpaceModelDeviceN,
+    5 => NSColorSpaceModelIndexed,
+    6 => NSColorSpaceModelPatterned,
+    _ => throw ArgumentError('Unknown value for NSColorSpaceModel: $value'),
   };
 }
 
-late final _class_SCRunningApplication = objc.getClass("SCRunningApplication");
+/// WARNING: NSColorSpace is a stub. To generate bindings for this class, include
+/// NSColorSpace in your config's objc-interfaces list.
+///
+/// NSColorSpace
+extension type NSColorSpace._(objc.ObjCObject object$)
+    implements objc.ObjCObject, objc.NSObject, objc.NSSecureCoding {
+  /// Constructs a [NSColorSpace] that points to the same underlying object as [other].
+  NSColorSpace.as(objc.ObjCObject other) : object$ = other {
+    objc.checkOsVersionInternal('NSColorSpace', iOS: (true, null));
+  }
+
+  /// Constructs a [NSColorSpace] that wraps the given raw object pointer.
+  NSColorSpace.fromPointer(
+    ffi.Pointer<objc.ObjCObjectImpl> other, {
+    bool retain = false,
+    bool release = false,
+  }) : object$ = objc.ObjCObject(other, retain: retain, release: release) {
+    objc.checkOsVersionInternal('NSColorSpace', iOS: (true, null));
+  }
+}
+
+late final _class_NSScreen = objc.getClass("NSScreen");
 late final _sel_isKindOfClass_ = objc.registerName("isKindOfClass:");
 final _objc_msgSend_19nvye5 = objc.msgSendPointer
     .cast<
@@ -249,7 +271,7 @@ final _objc_msgSend_19nvye5 = objc.msgSendPointer
         ffi.Pointer<objc.ObjCObjectImpl>,
       )
     >();
-late final _sel_bundleIdentifier = objc.registerName("bundleIdentifier");
+late final _sel_screens = objc.registerName("screens");
 final _objc_msgSend_151sglz = objc.msgSendPointer
     .cast<
       ffi.NativeFunction<
@@ -265,162 +287,31 @@ final _objc_msgSend_151sglz = objc.msgSendPointer
         ffi.Pointer<objc.ObjCSelector>,
       )
     >();
-late final _sel_applicationName = objc.registerName("applicationName");
-late final _sel_processID = objc.registerName("processID");
-final _objc_msgSend_13yqbb6 = objc.msgSendPointer
+late final _sel_mainScreen = objc.registerName("mainScreen");
+late final _sel_deepestScreen = objc.registerName("deepestScreen");
+late final _sel_screensHaveSeparateSpaces = objc.registerName(
+  "screensHaveSeparateSpaces",
+);
+final _objc_msgSend_91o635 = objc.msgSendPointer
     .cast<
       ffi.NativeFunction<
-        ffi.Int Function(
+        ffi.Bool Function(
           ffi.Pointer<objc.ObjCObjectImpl>,
           ffi.Pointer<objc.ObjCSelector>,
         )
       >
     >()
     .asFunction<
-      int Function(
+      bool Function(
         ffi.Pointer<objc.ObjCObjectImpl>,
         ffi.Pointer<objc.ObjCSelector>,
       )
     >();
-typedef instancetype = ffi.Pointer<objc.ObjCObjectImpl>;
-typedef Dartinstancetype = objc.ObjCObject;
-late final _sel_init = objc.registerName("init");
-late final _sel_new = objc.registerName("new");
-late final _sel_allocWithZone_ = objc.registerName("allocWithZone:");
-final _objc_msgSend_1cwp428 = objc.msgSendPointer
+late final _sel_depth = objc.registerName("depth");
+final _objc_msgSend_8sdj0f = objc.msgSendPointer
     .cast<
       ffi.NativeFunction<
-        ffi.Pointer<objc.ObjCObjectImpl> Function(
-          ffi.Pointer<objc.ObjCObjectImpl>,
-          ffi.Pointer<objc.ObjCSelector>,
-          ffi.Pointer<objc.NSZone>,
-        )
-      >
-    >()
-    .asFunction<
-      ffi.Pointer<objc.ObjCObjectImpl> Function(
-        ffi.Pointer<objc.ObjCObjectImpl>,
-        ffi.Pointer<objc.ObjCSelector>,
-        ffi.Pointer<objc.NSZone>,
-      )
-    >();
-late final _sel_alloc = objc.registerName("alloc");
-
-/// SCRunningApplication
-extension type SCRunningApplication._(objc.ObjCObject object$)
-    implements objc.ObjCObject, objc.NSObject {
-  /// Constructs a [SCRunningApplication] that points to the same underlying object as [other].
-  SCRunningApplication.as(objc.ObjCObject other) : object$ = other {
-    objc.checkOsVersionInternal(
-      'SCRunningApplication',
-      macOS: (false, (12, 3, 0)),
-    );
-    assert(isA(object$));
-  }
-
-  /// Constructs a [SCRunningApplication] that wraps the given raw object pointer.
-  SCRunningApplication.fromPointer(
-    ffi.Pointer<objc.ObjCObjectImpl> other, {
-    bool retain = false,
-    bool release = false,
-  }) : object$ = objc.ObjCObject(other, retain: retain, release: release) {
-    objc.checkOsVersionInternal(
-      'SCRunningApplication',
-      macOS: (false, (12, 3, 0)),
-    );
-    assert(isA(object$));
-  }
-
-  /// Returns whether [obj] is an instance of [SCRunningApplication].
-  static bool isA(objc.ObjCObject obj) => _objc_msgSend_19nvye5(
-    obj.ref.pointer,
-    _sel_isKindOfClass_,
-    _class_SCRunningApplication,
-  );
-
-  /// alloc
-  static SCRunningApplication alloc() {
-    final $ret = _objc_msgSend_151sglz(_class_SCRunningApplication, _sel_alloc);
-    return SCRunningApplication.fromPointer($ret, retain: false, release: true);
-  }
-
-  /// allocWithZone:
-  static SCRunningApplication allocWithZone(ffi.Pointer<objc.NSZone> zone) {
-    final $ret = _objc_msgSend_1cwp428(
-      _class_SCRunningApplication,
-      _sel_allocWithZone_,
-      zone,
-    );
-    return SCRunningApplication.fromPointer($ret, retain: false, release: true);
-  }
-
-  /// new
-  static SCRunningApplication new$() {
-    final $ret = _objc_msgSend_151sglz(_class_SCRunningApplication, _sel_new);
-    return SCRunningApplication.fromPointer($ret, retain: false, release: true);
-  }
-
-  /// Returns a new instance of SCRunningApplication constructed with the default `new` method.
-  SCRunningApplication() : this.as(new$().object$);
-}
-
-extension SCRunningApplication$Methods on SCRunningApplication {
-  /// applicationName
-  objc.NSString get applicationName {
-    objc.checkOsVersionInternal(
-      'SCRunningApplication.applicationName',
-      macOS: (false, (12, 3, 0)),
-    );
-    final $ret = _objc_msgSend_151sglz(
-      object$.ref.pointer,
-      _sel_applicationName,
-    );
-    return objc.NSString.fromPointer($ret, retain: true, release: true);
-  }
-
-  /// bundleIdentifier
-  objc.NSString get bundleIdentifier {
-    objc.checkOsVersionInternal(
-      'SCRunningApplication.bundleIdentifier',
-      macOS: (false, (12, 3, 0)),
-    );
-    final $ret = _objc_msgSend_151sglz(
-      object$.ref.pointer,
-      _sel_bundleIdentifier,
-    );
-    return objc.NSString.fromPointer($ret, retain: true, release: true);
-  }
-
-  /// init
-  SCRunningApplication init() {
-    objc.checkOsVersionInternal(
-      'SCRunningApplication.init',
-      iOS: (false, (2, 0, 0)),
-      macOS: (false, (10, 0, 0)),
-    );
-    final $ret = _objc_msgSend_151sglz(
-      object$.ref.retainAndReturnPointer(),
-      _sel_init,
-    );
-    return SCRunningApplication.fromPointer($ret, retain: false, release: true);
-  }
-
-  /// processID
-  int get processID {
-    objc.checkOsVersionInternal(
-      'SCRunningApplication.processID',
-      macOS: (false, (12, 3, 0)),
-    );
-    return _objc_msgSend_13yqbb6(object$.ref.pointer, _sel_processID);
-  }
-}
-
-late final _class_SCWindow = objc.getClass("SCWindow");
-late final _sel_windowID = objc.registerName("windowID");
-final _objc_msgSend_usggvf = objc.msgSendPointer
-    .cast<
-      ffi.NativeFunction<
-        ffi.Uint32 Function(
+        ffi.Int32 Function(
           ffi.Pointer<objc.ObjCObjectImpl>,
           ffi.Pointer<objc.ObjCSelector>,
         )
@@ -465,8 +356,251 @@ final _objc_msgSend_bu1hbwStret = objc.msgSendStretPointer
         ffi.Pointer<objc.ObjCSelector>,
       )
     >();
-late final _sel_title = objc.registerName("title");
-late final _sel_windowLayer = objc.registerName("windowLayer");
+late final _sel_visibleFrame = objc.registerName("visibleFrame");
+late final _sel_deviceDescription = objc.registerName("deviceDescription");
+late final _sel_colorSpace = objc.registerName("colorSpace");
+late final _sel_supportedWindowDepths = objc.registerName(
+  "supportedWindowDepths",
+);
+final _objc_msgSend_1nb3zed = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.Pointer<ffi.Int32> Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+        )
+      >
+    >()
+    .asFunction<
+      ffi.Pointer<ffi.Int32> Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+      )
+    >();
+late final _sel_canRepresentDisplayGamut_ = objc.registerName(
+  "canRepresentDisplayGamut:",
+);
+final _objc_msgSend_728x5i = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.Bool Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+          ffi.Long,
+        )
+      >
+    >()
+    .asFunction<
+      bool Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+        int,
+      )
+    >();
+late final _sel_convertRectToBacking_ = objc.registerName(
+  "convertRectToBacking:",
+);
+final _objc_msgSend_1gn1s3d = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        objc.CGRect Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+          objc.CGRect,
+        )
+      >
+    >()
+    .asFunction<
+      objc.CGRect Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+        objc.CGRect,
+      )
+    >();
+final _objc_msgSend_1gn1s3dStret = objc.msgSendStretPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.Void Function(
+          ffi.Pointer<objc.CGRect>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+          objc.CGRect,
+        )
+      >
+    >()
+    .asFunction<
+      void Function(
+        ffi.Pointer<objc.CGRect>,
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+        objc.CGRect,
+      )
+    >();
+late final _sel_convertRectFromBacking_ = objc.registerName(
+  "convertRectFromBacking:",
+);
+late final _sel_backingAlignedRect_options_ = objc.registerName(
+  "backingAlignedRect:options:",
+);
+final _objc_msgSend_qmdcb3 = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        objc.CGRect Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+          objc.CGRect,
+          ffi.LongLong,
+        )
+      >
+    >()
+    .asFunction<
+      objc.CGRect Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+        objc.CGRect,
+        int,
+      )
+    >();
+final _objc_msgSend_qmdcb3Stret = objc.msgSendStretPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.Void Function(
+          ffi.Pointer<objc.CGRect>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+          objc.CGRect,
+          ffi.LongLong,
+        )
+      >
+    >()
+    .asFunction<
+      void Function(
+        ffi.Pointer<objc.CGRect>,
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+        objc.CGRect,
+        int,
+      )
+    >();
+late final _sel_backingScaleFactor = objc.registerName("backingScaleFactor");
+final _objc_msgSend_1ukqyt8 = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.Double Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+        )
+      >
+    >()
+    .asFunction<
+      double Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+      )
+    >();
+final _objc_msgSend_1ukqyt8Fpret = objc.msgSendFpretPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.Double Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+        )
+      >
+    >()
+    .asFunction<
+      double Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+      )
+    >();
+late final _sel_localizedName = objc.registerName("localizedName");
+late final _sel_safeAreaInsets = objc.registerName("safeAreaInsets");
+final _objc_msgSend_sl0cgw = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        objc.NSEdgeInsets Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+        )
+      >
+    >()
+    .asFunction<
+      objc.NSEdgeInsets Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+      )
+    >();
+final _objc_msgSend_sl0cgwStret = objc.msgSendStretPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.Void Function(
+          ffi.Pointer<objc.NSEdgeInsets>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+        )
+      >
+    >()
+    .asFunction<
+      void Function(
+        ffi.Pointer<objc.NSEdgeInsets>,
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+      )
+    >();
+late final _sel_auxiliaryTopLeftArea = objc.registerName(
+  "auxiliaryTopLeftArea",
+);
+late final _sel_auxiliaryTopRightArea = objc.registerName(
+  "auxiliaryTopRightArea",
+);
+late final _sel_CGDirectDisplayID = objc.registerName("CGDirectDisplayID");
+final _objc_msgSend_usggvf = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.Uint32 Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+        )
+      >
+    >()
+    .asFunction<
+      int Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+      )
+    >();
+typedef instancetype = ffi.Pointer<objc.ObjCObjectImpl>;
+typedef Dartinstancetype = objc.ObjCObject;
+late final _sel_init = objc.registerName("init");
+late final _sel_new = objc.registerName("new");
+late final _sel_allocWithZone_ = objc.registerName("allocWithZone:");
+final _objc_msgSend_1cwp428 = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.Pointer<objc.ObjCObjectImpl> Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+          ffi.Pointer<objc.NSZone>,
+        )
+      >
+    >()
+    .asFunction<
+      ffi.Pointer<objc.ObjCObjectImpl> Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+        ffi.Pointer<objc.NSZone>,
+      )
+    >();
+late final _sel_alloc = objc.registerName("alloc");
+late final _sel_maximumExtendedDynamicRangeColorComponentValue = objc
+    .registerName("maximumExtendedDynamicRangeColorComponentValue");
+late final _sel_maximumPotentialExtendedDynamicRangeColorComponentValue = objc
+    .registerName("maximumPotentialExtendedDynamicRangeColorComponentValue");
+late final _sel_maximumReferenceExtendedDynamicRangeColorComponentValue = objc
+    .registerName("maximumReferenceExtendedDynamicRangeColorComponentValue");
+late final _sel_maximumFramesPerSecond = objc.registerName(
+  "maximumFramesPerSecond",
+);
 final _objc_msgSend_1hz7y9r = objc.msgSendPointer
     .cast<
       ffi.NativeFunction<
@@ -482,81 +616,425 @@ final _objc_msgSend_1hz7y9r = objc.msgSendPointer
         ffi.Pointer<objc.ObjCSelector>,
       )
     >();
-late final _sel_owningApplication = objc.registerName("owningApplication");
-late final _sel_isOnScreen = objc.registerName("isOnScreen");
-final _objc_msgSend_91o635 = objc.msgSendPointer
+late final _sel_minimumRefreshInterval = objc.registerName(
+  "minimumRefreshInterval",
+);
+late final _sel_maximumRefreshInterval = objc.registerName(
+  "maximumRefreshInterval",
+);
+late final _sel_displayUpdateGranularity = objc.registerName(
+  "displayUpdateGranularity",
+);
+late final _sel_lastDisplayUpdateTimestamp = objc.registerName(
+  "lastDisplayUpdateTimestamp",
+);
+
+///
+extension unnamed on NSScreen {}
+
+///
+extension unnamed$1 on NSScreen {}
+
+/// WARNING: CADisplayLink is a stub. To generate bindings for this class, include
+/// CADisplayLink in your config's objc-interfaces list.
+///
+/// CADisplayLink
+extension type CADisplayLink._(objc.ObjCObject object$)
+    implements objc.ObjCObject {
+  /// Constructs a [CADisplayLink] that points to the same underlying object as [other].
+  CADisplayLink.as(objc.ObjCObject other) : object$ = other {}
+
+  /// Constructs a [CADisplayLink] that wraps the given raw object pointer.
+  CADisplayLink.fromPointer(
+    ffi.Pointer<objc.ObjCObjectImpl> other, {
+    bool retain = false,
+    bool release = false,
+  }) : object$ = objc.ObjCObject(other, retain: retain, release: release) {}
+}
+
+late final _sel_displayLinkWithTarget_selector_ = objc.registerName(
+  "displayLinkWithTarget:selector:",
+);
+final _objc_msgSend_836y90 = objc.msgSendPointer
     .cast<
       ffi.NativeFunction<
-        ffi.Bool Function(
+        ffi.Pointer<objc.ObjCObjectImpl> Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
           ffi.Pointer<objc.ObjCObjectImpl>,
           ffi.Pointer<objc.ObjCSelector>,
         )
       >
     >()
     .asFunction<
-      bool Function(
+      ffi.Pointer<objc.ObjCObjectImpl> Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
         ffi.Pointer<objc.ObjCObjectImpl>,
         ffi.Pointer<objc.ObjCSelector>,
       )
     >();
-late final _sel_isActive = objc.registerName("isActive");
 
-/// SCWindow
-extension type SCWindow._(objc.ObjCObject object$)
+/// NSDisplayLink
+extension NSDisplayLink on NSScreen {
+  /// displayLinkWithTarget:selector:
+  CADisplayLink displayLinkWithTarget(
+    objc.ObjCObject target, {
+    required ffi.Pointer<objc.ObjCSelector> selector,
+  }) {
+    objc.checkOsVersionInternal(
+      'NSScreen.displayLinkWithTarget:selector:',
+      iOS: (true, null),
+    );
+    final $ret = _objc_msgSend_836y90(
+      object$.ref.pointer,
+      _sel_displayLinkWithTarget_selector_,
+      target.ref.pointer,
+      selector,
+    );
+    return CADisplayLink.fromPointer($ret, retain: true, release: true);
+  }
+}
+
+late final _sel_userSpaceScaleFactor = objc.registerName(
+  "userSpaceScaleFactor",
+);
+
+/// NSDeprecated
+extension NSDeprecated on NSScreen {
+  /// userSpaceScaleFactor
+  double userSpaceScaleFactor() {
+    objc.checkOsVersionInternal(
+      'NSScreen.userSpaceScaleFactor',
+      iOS: (true, null),
+      macOS: (false, (10, 4, 0)),
+    );
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(
+            object$.ref.pointer,
+            _sel_userSpaceScaleFactor,
+          )
+        : _objc_msgSend_1ukqyt8(object$.ref.pointer, _sel_userSpaceScaleFactor);
+  }
+}
+
+/// NSScreen
+extension type NSScreen._(objc.ObjCObject object$)
     implements objc.ObjCObject, objc.NSObject {
-  /// Constructs a [SCWindow] that points to the same underlying object as [other].
-  SCWindow.as(objc.ObjCObject other) : object$ = other {
-    objc.checkOsVersionInternal('SCWindow', macOS: (false, (12, 3, 0)));
+  /// Constructs a [NSScreen] that points to the same underlying object as [other].
+  NSScreen.as(objc.ObjCObject other) : object$ = other {
+    objc.checkOsVersionInternal('NSScreen', iOS: (true, null));
     assert(isA(object$));
   }
 
-  /// Constructs a [SCWindow] that wraps the given raw object pointer.
-  SCWindow.fromPointer(
+  /// Constructs a [NSScreen] that wraps the given raw object pointer.
+  NSScreen.fromPointer(
     ffi.Pointer<objc.ObjCObjectImpl> other, {
     bool retain = false,
     bool release = false,
   }) : object$ = objc.ObjCObject(other, retain: retain, release: release) {
-    objc.checkOsVersionInternal('SCWindow', macOS: (false, (12, 3, 0)));
+    objc.checkOsVersionInternal('NSScreen', iOS: (true, null));
     assert(isA(object$));
   }
 
-  /// Returns whether [obj] is an instance of [SCWindow].
+  /// Returns whether [obj] is an instance of [NSScreen].
   static bool isA(objc.ObjCObject obj) => _objc_msgSend_19nvye5(
     obj.ref.pointer,
     _sel_isKindOfClass_,
-    _class_SCWindow,
+    _class_NSScreen,
   );
 
   /// alloc
-  static SCWindow alloc() {
-    final $ret = _objc_msgSend_151sglz(_class_SCWindow, _sel_alloc);
-    return SCWindow.fromPointer($ret, retain: false, release: true);
+  static NSScreen alloc() {
+    final $ret = _objc_msgSend_151sglz(_class_NSScreen, _sel_alloc);
+    return NSScreen.fromPointer($ret, retain: false, release: true);
   }
 
   /// allocWithZone:
-  static SCWindow allocWithZone(ffi.Pointer<objc.NSZone> zone) {
+  static NSScreen allocWithZone(ffi.Pointer<objc.NSZone> zone) {
     final $ret = _objc_msgSend_1cwp428(
-      _class_SCWindow,
+      _class_NSScreen,
       _sel_allocWithZone_,
       zone,
     );
-    return SCWindow.fromPointer($ret, retain: false, release: true);
+    return NSScreen.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// deepestScreen
+  static NSScreen? getDeepestScreen() {
+    objc.checkOsVersionInternal('NSScreen.deepestScreen', iOS: (true, null));
+    final $ret = _objc_msgSend_151sglz(_class_NSScreen, _sel_deepestScreen);
+    return $ret.address == 0
+        ? null
+        : NSScreen.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// mainScreen
+  static NSScreen? getMainScreen() {
+    objc.checkOsVersionInternal('NSScreen.mainScreen', iOS: (true, null));
+    final $ret = _objc_msgSend_151sglz(_class_NSScreen, _sel_mainScreen);
+    return $ret.address == 0
+        ? null
+        : NSScreen.fromPointer($ret, retain: true, release: true);
   }
 
   /// new
-  static SCWindow new$() {
-    final $ret = _objc_msgSend_151sglz(_class_SCWindow, _sel_new);
-    return SCWindow.fromPointer($ret, retain: false, release: true);
+  static NSScreen new$() {
+    final $ret = _objc_msgSend_151sglz(_class_NSScreen, _sel_new);
+    return NSScreen.fromPointer($ret, retain: false, release: true);
   }
 
-  /// Returns a new instance of SCWindow constructed with the default `new` method.
-  SCWindow() : this.as(new$().object$);
+  /// screens
+  static objc.NSArray getScreens() {
+    objc.checkOsVersionInternal('NSScreen.screens', iOS: (true, null));
+    final $ret = _objc_msgSend_151sglz(_class_NSScreen, _sel_screens);
+    return objc.NSArray.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// screensHaveSeparateSpaces
+  static bool getScreensHaveSeparateSpaces() {
+    objc.checkOsVersionInternal(
+      'NSScreen.screensHaveSeparateSpaces',
+      iOS: (true, null),
+      macOS: (false, (10, 9, 0)),
+    );
+    return _objc_msgSend_91o635(
+      _class_NSScreen,
+      _sel_screensHaveSeparateSpaces,
+    );
+  }
+
+  /// Returns a new instance of NSScreen constructed with the default `new` method.
+  NSScreen() : this.as(new$().object$);
 }
 
-extension SCWindow$Methods on SCWindow {
+extension NSScreen$Methods on NSScreen {
+  /// CGDirectDisplayID
+  int get CGDirectDisplayID {
+    objc.checkOsVersionInternal(
+      'NSScreen.CGDirectDisplayID',
+      iOS: (true, null),
+      macOS: (false, (26, 0, 0)),
+    );
+    return _objc_msgSend_usggvf(object$.ref.pointer, _sel_CGDirectDisplayID);
+  }
+
+  /// auxiliaryTopLeftArea
+  objc.CGRect get auxiliaryTopLeftArea {
+    objc.checkOsVersionInternal(
+      'NSScreen.auxiliaryTopLeftArea',
+      iOS: (true, null),
+      macOS: (false, (12, 0, 0)),
+    );
+    final $ptr = pkg_ffi.calloc<objc.CGRect>();
+    objc.useMsgSendVariants
+        ? _objc_msgSend_bu1hbwStret(
+            $ptr,
+            object$.ref.pointer,
+            _sel_auxiliaryTopLeftArea,
+          )
+        : $ptr.ref = _objc_msgSend_bu1hbw(
+            object$.ref.pointer,
+            _sel_auxiliaryTopLeftArea,
+          );
+    final $finalizable = $ptr.cast<ffi.Uint8>().asTypedList(
+      ffi.sizeOf<objc.CGRect>(),
+      finalizer: pkg_ffi.calloc.nativeFree,
+    );
+    return ffi.Struct.create<objc.CGRect>($finalizable);
+  }
+
+  /// auxiliaryTopRightArea
+  objc.CGRect get auxiliaryTopRightArea {
+    objc.checkOsVersionInternal(
+      'NSScreen.auxiliaryTopRightArea',
+      iOS: (true, null),
+      macOS: (false, (12, 0, 0)),
+    );
+    final $ptr = pkg_ffi.calloc<objc.CGRect>();
+    objc.useMsgSendVariants
+        ? _objc_msgSend_bu1hbwStret(
+            $ptr,
+            object$.ref.pointer,
+            _sel_auxiliaryTopRightArea,
+          )
+        : $ptr.ref = _objc_msgSend_bu1hbw(
+            object$.ref.pointer,
+            _sel_auxiliaryTopRightArea,
+          );
+    final $finalizable = $ptr.cast<ffi.Uint8>().asTypedList(
+      ffi.sizeOf<objc.CGRect>(),
+      finalizer: pkg_ffi.calloc.nativeFree,
+    );
+    return ffi.Struct.create<objc.CGRect>($finalizable);
+  }
+
+  /// backingAlignedRect:options:
+  objc.CGRect backingAlignedRect(objc.CGRect rect, {required int options}) {
+    objc.checkOsVersionInternal(
+      'NSScreen.backingAlignedRect:options:',
+      iOS: (true, null),
+      macOS: (false, (10, 7, 0)),
+    );
+    final $ptr = pkg_ffi.calloc<objc.CGRect>();
+    objc.useMsgSendVariants
+        ? _objc_msgSend_qmdcb3Stret(
+            $ptr,
+            object$.ref.pointer,
+            _sel_backingAlignedRect_options_,
+            rect,
+            options,
+          )
+        : $ptr.ref = _objc_msgSend_qmdcb3(
+            object$.ref.pointer,
+            _sel_backingAlignedRect_options_,
+            rect,
+            options,
+          );
+    final $finalizable = $ptr.cast<ffi.Uint8>().asTypedList(
+      ffi.sizeOf<objc.CGRect>(),
+      finalizer: pkg_ffi.calloc.nativeFree,
+    );
+    return ffi.Struct.create<objc.CGRect>($finalizable);
+  }
+
+  /// backingScaleFactor
+  double get backingScaleFactor {
+    objc.checkOsVersionInternal(
+      'NSScreen.backingScaleFactor',
+      iOS: (true, null),
+      macOS: (false, (10, 7, 0)),
+    );
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(
+            object$.ref.pointer,
+            _sel_backingScaleFactor,
+          )
+        : _objc_msgSend_1ukqyt8(object$.ref.pointer, _sel_backingScaleFactor);
+  }
+
+  /// canRepresentDisplayGamut:
+  bool canRepresentDisplayGamut(NSDisplayGamut displayGamut) {
+    objc.checkOsVersionInternal(
+      'NSScreen.canRepresentDisplayGamut:',
+      iOS: (true, null),
+      macOS: (false, (10, 12, 0)),
+    );
+    return _objc_msgSend_728x5i(
+      object$.ref.pointer,
+      _sel_canRepresentDisplayGamut_,
+      displayGamut.value,
+    );
+  }
+
+  /// colorSpace
+  NSColorSpace? get colorSpace {
+    objc.checkOsVersionInternal(
+      'NSScreen.colorSpace',
+      iOS: (true, null),
+      macOS: (false, (10, 6, 0)),
+    );
+    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_colorSpace);
+    return $ret.address == 0
+        ? null
+        : NSColorSpace.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// convertRectFromBacking:
+  objc.CGRect convertRectFromBacking(objc.CGRect rect) {
+    objc.checkOsVersionInternal(
+      'NSScreen.convertRectFromBacking:',
+      iOS: (true, null),
+      macOS: (false, (10, 7, 0)),
+    );
+    final $ptr = pkg_ffi.calloc<objc.CGRect>();
+    objc.useMsgSendVariants
+        ? _objc_msgSend_1gn1s3dStret(
+            $ptr,
+            object$.ref.pointer,
+            _sel_convertRectFromBacking_,
+            rect,
+          )
+        : $ptr.ref = _objc_msgSend_1gn1s3d(
+            object$.ref.pointer,
+            _sel_convertRectFromBacking_,
+            rect,
+          );
+    final $finalizable = $ptr.cast<ffi.Uint8>().asTypedList(
+      ffi.sizeOf<objc.CGRect>(),
+      finalizer: pkg_ffi.calloc.nativeFree,
+    );
+    return ffi.Struct.create<objc.CGRect>($finalizable);
+  }
+
+  /// convertRectToBacking:
+  objc.CGRect convertRectToBacking(objc.CGRect rect) {
+    objc.checkOsVersionInternal(
+      'NSScreen.convertRectToBacking:',
+      iOS: (true, null),
+      macOS: (false, (10, 7, 0)),
+    );
+    final $ptr = pkg_ffi.calloc<objc.CGRect>();
+    objc.useMsgSendVariants
+        ? _objc_msgSend_1gn1s3dStret(
+            $ptr,
+            object$.ref.pointer,
+            _sel_convertRectToBacking_,
+            rect,
+          )
+        : $ptr.ref = _objc_msgSend_1gn1s3d(
+            object$.ref.pointer,
+            _sel_convertRectToBacking_,
+            rect,
+          );
+    final $finalizable = $ptr.cast<ffi.Uint8>().asTypedList(
+      ffi.sizeOf<objc.CGRect>(),
+      finalizer: pkg_ffi.calloc.nativeFree,
+    );
+    return ffi.Struct.create<objc.CGRect>($finalizable);
+  }
+
+  /// depth
+  NSWindowDepth get depth {
+    objc.checkOsVersionInternal('NSScreen.depth', iOS: (true, null));
+    final $ret = _objc_msgSend_8sdj0f(object$.ref.pointer, _sel_depth);
+    return NSWindowDepth.fromValue($ret);
+  }
+
+  /// deviceDescription
+  objc.NSDictionary get deviceDescription {
+    objc.checkOsVersionInternal(
+      'NSScreen.deviceDescription',
+      iOS: (true, null),
+    );
+    final $ret = _objc_msgSend_151sglz(
+      object$.ref.pointer,
+      _sel_deviceDescription,
+    );
+    return objc.NSDictionary.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// displayUpdateGranularity
+  double get displayUpdateGranularity {
+    objc.checkOsVersionInternal(
+      'NSScreen.displayUpdateGranularity',
+      iOS: (true, null),
+      macOS: (false, (12, 0, 0)),
+    );
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(
+            object$.ref.pointer,
+            _sel_displayUpdateGranularity,
+          )
+        : _objc_msgSend_1ukqyt8(
+            object$.ref.pointer,
+            _sel_displayUpdateGranularity,
+          );
+  }
+
   /// frame
   objc.CGRect get frame {
-    objc.checkOsVersionInternal('SCWindow.frame', macOS: (false, (12, 3, 0)));
+    objc.checkOsVersionInternal('NSScreen.frame', iOS: (true, null));
     final $ptr = pkg_ffi.calloc<objc.CGRect>();
     objc.useMsgSendVariants
         ? _objc_msgSend_bu1hbwStret($ptr, object$.ref.pointer, _sel_frame)
@@ -569,9 +1047,9 @@ extension SCWindow$Methods on SCWindow {
   }
 
   /// init
-  SCWindow init() {
+  NSScreen init() {
     objc.checkOsVersionInternal(
-      'SCWindow.init',
+      'NSScreen.init',
       iOS: (false, (2, 0, 0)),
       macOS: (false, (10, 0, 0)),
     );
@@ -579,67 +1057,238 @@ extension SCWindow$Methods on SCWindow {
       object$.ref.retainAndReturnPointer(),
       _sel_init,
     );
-    return SCWindow.fromPointer($ret, retain: false, release: true);
+    return NSScreen.fromPointer($ret, retain: false, release: true);
   }
 
-  /// isActive
-  bool get isActive {
+  /// lastDisplayUpdateTimestamp
+  double get lastDisplayUpdateTimestamp {
     objc.checkOsVersionInternal(
-      'SCWindow.isActive',
-      macOS: (false, (13, 1, 0)),
+      'NSScreen.lastDisplayUpdateTimestamp',
+      iOS: (true, null),
+      macOS: (false, (12, 0, 0)),
     );
-    return _objc_msgSend_91o635(object$.ref.pointer, _sel_isActive);
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(
+            object$.ref.pointer,
+            _sel_lastDisplayUpdateTimestamp,
+          )
+        : _objc_msgSend_1ukqyt8(
+            object$.ref.pointer,
+            _sel_lastDisplayUpdateTimestamp,
+          );
   }
 
-  /// isOnScreen
-  bool get isOnScreen {
+  /// localizedName
+  objc.NSString get localizedName {
     objc.checkOsVersionInternal(
-      'SCWindow.isOnScreen',
-      macOS: (false, (12, 3, 0)),
+      'NSScreen.localizedName',
+      iOS: (true, null),
+      macOS: (false, (10, 15, 0)),
     );
-    return _objc_msgSend_91o635(object$.ref.pointer, _sel_isOnScreen);
+    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_localizedName);
+    return objc.NSString.fromPointer($ret, retain: true, release: true);
   }
 
-  /// owningApplication
-  SCRunningApplication? get owningApplication {
+  /// maximumExtendedDynamicRangeColorComponentValue
+  double get maximumExtendedDynamicRangeColorComponentValue {
     objc.checkOsVersionInternal(
-      'SCWindow.owningApplication',
-      macOS: (false, (12, 3, 0)),
+      'NSScreen.maximumExtendedDynamicRangeColorComponentValue',
+      iOS: (true, null),
+      macOS: (false, (10, 11, 0)),
     );
-    final $ret = _objc_msgSend_151sglz(
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(
+            object$.ref.pointer,
+            _sel_maximumExtendedDynamicRangeColorComponentValue,
+          )
+        : _objc_msgSend_1ukqyt8(
+            object$.ref.pointer,
+            _sel_maximumExtendedDynamicRangeColorComponentValue,
+          );
+  }
+
+  /// maximumFramesPerSecond
+  int get maximumFramesPerSecond {
+    objc.checkOsVersionInternal(
+      'NSScreen.maximumFramesPerSecond',
+      iOS: (true, null),
+      macOS: (false, (12, 0, 0)),
+    );
+    return _objc_msgSend_1hz7y9r(
       object$.ref.pointer,
-      _sel_owningApplication,
+      _sel_maximumFramesPerSecond,
     );
-    return $ret.address == 0
-        ? null
-        : SCRunningApplication.fromPointer($ret, retain: true, release: true);
   }
 
-  /// title
-  objc.NSString? get title {
-    objc.checkOsVersionInternal('SCWindow.title', macOS: (false, (12, 3, 0)));
-    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_title);
-    return $ret.address == 0
-        ? null
-        : objc.NSString.fromPointer($ret, retain: true, release: true);
-  }
-
-  /// windowID
-  int get windowID {
+  /// maximumPotentialExtendedDynamicRangeColorComponentValue
+  double get maximumPotentialExtendedDynamicRangeColorComponentValue {
     objc.checkOsVersionInternal(
-      'SCWindow.windowID',
-      macOS: (false, (12, 3, 0)),
+      'NSScreen.maximumPotentialExtendedDynamicRangeColorComponentValue',
+      iOS: (true, null),
+      macOS: (false, (10, 15, 0)),
     );
-    return _objc_msgSend_usggvf(object$.ref.pointer, _sel_windowID);
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(
+            object$.ref.pointer,
+            _sel_maximumPotentialExtendedDynamicRangeColorComponentValue,
+          )
+        : _objc_msgSend_1ukqyt8(
+            object$.ref.pointer,
+            _sel_maximumPotentialExtendedDynamicRangeColorComponentValue,
+          );
   }
 
-  /// windowLayer
-  int get windowLayer {
+  /// maximumReferenceExtendedDynamicRangeColorComponentValue
+  double get maximumReferenceExtendedDynamicRangeColorComponentValue {
     objc.checkOsVersionInternal(
-      'SCWindow.windowLayer',
-      macOS: (false, (12, 3, 0)),
+      'NSScreen.maximumReferenceExtendedDynamicRangeColorComponentValue',
+      iOS: (true, null),
+      macOS: (false, (10, 15, 0)),
     );
-    return _objc_msgSend_1hz7y9r(object$.ref.pointer, _sel_windowLayer);
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(
+            object$.ref.pointer,
+            _sel_maximumReferenceExtendedDynamicRangeColorComponentValue,
+          )
+        : _objc_msgSend_1ukqyt8(
+            object$.ref.pointer,
+            _sel_maximumReferenceExtendedDynamicRangeColorComponentValue,
+          );
+  }
+
+  /// maximumRefreshInterval
+  double get maximumRefreshInterval {
+    objc.checkOsVersionInternal(
+      'NSScreen.maximumRefreshInterval',
+      iOS: (true, null),
+      macOS: (false, (12, 0, 0)),
+    );
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(
+            object$.ref.pointer,
+            _sel_maximumRefreshInterval,
+          )
+        : _objc_msgSend_1ukqyt8(
+            object$.ref.pointer,
+            _sel_maximumRefreshInterval,
+          );
+  }
+
+  /// minimumRefreshInterval
+  double get minimumRefreshInterval {
+    objc.checkOsVersionInternal(
+      'NSScreen.minimumRefreshInterval',
+      iOS: (true, null),
+      macOS: (false, (12, 0, 0)),
+    );
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(
+            object$.ref.pointer,
+            _sel_minimumRefreshInterval,
+          )
+        : _objc_msgSend_1ukqyt8(
+            object$.ref.pointer,
+            _sel_minimumRefreshInterval,
+          );
+  }
+
+  /// safeAreaInsets
+  objc.NSEdgeInsets get safeAreaInsets {
+    objc.checkOsVersionInternal(
+      'NSScreen.safeAreaInsets',
+      iOS: (true, null),
+      macOS: (false, (12, 0, 0)),
+    );
+    final $ptr = pkg_ffi.calloc<objc.NSEdgeInsets>();
+    objc.useMsgSendVariants
+        ? _objc_msgSend_sl0cgwStret(
+            $ptr,
+            object$.ref.pointer,
+            _sel_safeAreaInsets,
+          )
+        : $ptr.ref = _objc_msgSend_sl0cgw(
+            object$.ref.pointer,
+            _sel_safeAreaInsets,
+          );
+    final $finalizable = $ptr.cast<ffi.Uint8>().asTypedList(
+      ffi.sizeOf<objc.NSEdgeInsets>(),
+      finalizer: pkg_ffi.calloc.nativeFree,
+    );
+    return ffi.Struct.create<objc.NSEdgeInsets>($finalizable);
+  }
+
+  /// supportedWindowDepths
+  ffi.Pointer<ffi.Int32> get supportedWindowDepths {
+    objc.checkOsVersionInternal(
+      'NSScreen.supportedWindowDepths',
+      iOS: (true, null),
+    );
+    return _objc_msgSend_1nb3zed(
+      object$.ref.pointer,
+      _sel_supportedWindowDepths,
+    );
+  }
+
+  /// visibleFrame
+  objc.CGRect get visibleFrame {
+    objc.checkOsVersionInternal('NSScreen.visibleFrame', iOS: (true, null));
+    final $ptr = pkg_ffi.calloc<objc.CGRect>();
+    objc.useMsgSendVariants
+        ? _objc_msgSend_bu1hbwStret(
+            $ptr,
+            object$.ref.pointer,
+            _sel_visibleFrame,
+          )
+        : $ptr.ref = _objc_msgSend_bu1hbw(
+            object$.ref.pointer,
+            _sel_visibleFrame,
+          );
+    final $finalizable = $ptr.cast<ffi.Uint8>().asTypedList(
+      ffi.sizeOf<objc.CGRect>(),
+      finalizer: pkg_ffi.calloc.nativeFree,
+    );
+    return ffi.Struct.create<objc.CGRect>($finalizable);
+  }
+}
+
+enum SCShareableContentStyle {
+  SCShareableContentStyleNone(0),
+  SCShareableContentStyleWindow(1),
+  SCShareableContentStyleDisplay(2),
+  SCShareableContentStyleApplication(3);
+
+  final int value;
+  const SCShareableContentStyle(this.value);
+
+  static SCShareableContentStyle fromValue(int value) => switch (value) {
+    0 => SCShareableContentStyleNone,
+    1 => SCShareableContentStyleWindow,
+    2 => SCShareableContentStyleDisplay,
+    3 => SCShareableContentStyleApplication,
+    _ => throw ArgumentError(
+      'Unknown value for SCShareableContentStyle: $value',
+    ),
+  };
+}
+
+/// WARNING: SCWindow is a stub. To generate bindings for this class, include
+/// SCWindow in your config's objc-interfaces list.
+///
+/// SCWindow
+extension type SCWindow._(objc.ObjCObject object$)
+    implements objc.ObjCObject, objc.NSObject {
+  /// Constructs a [SCWindow] that points to the same underlying object as [other].
+  SCWindow.as(objc.ObjCObject other) : object$ = other {
+    objc.checkOsVersionInternal('SCWindow', macOS: (false, (12, 3, 0)));
+  }
+
+  /// Constructs a [SCWindow] that wraps the given raw object pointer.
+  SCWindow.fromPointer(
+    ffi.Pointer<objc.ObjCObjectImpl> other, {
+    bool retain = false,
+    bool release = false,
+  }) : object$ = objc.ObjCObject(other, retain: retain, release: release) {
+    objc.checkOsVersionInternal('SCWindow', macOS: (false, (12, 3, 0)));
   }
 }
 
