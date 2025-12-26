@@ -8,11 +8,7 @@ import '../monitor.dart';
 import 'bindings.g.dart';
 
 class DesktopScreenshotMacOS extends DesktopScreenshot {
-  DesktopScreenshotMacOS() : super() {
-    // DynamicLibrary.open(
-    //   '/System/Library/Frameworks/ScreenCaptureKit.framework/ScreenCaptureKit',
-    // );
-  }
+  DesktopScreenshotMacOS() : super();
 
   @override
   bool hasPermission() {

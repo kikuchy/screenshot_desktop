@@ -37,15 +37,10 @@ final config = FfiGenerator(
       'SCScreenshotManager',
       'SCShareableContent',
       'SCContentFilter',
-      'SCStreamConfiguration',
       'SCWindow',
       'SCRunningApplication',
       'SCScreenshotConfiguration',
       'SCScreenshotOutput',
-      'NSMutableData',
-      'NSData',
-      'NSArray',
-      'UTType',
     }),
   ),
   output: Output(
@@ -68,7 +63,7 @@ final config = FfiGenerator(
   }),
   globals: Globals.includeSet({'kUTTypePNG', 'UTTypePNG'}),
   typedefs: Typedefs.includeSet({}),
-  enums: Enums.includeSet({'SCStreamErrorCode'}),
+  enums: Enums.includeSet({}),
 );
 
 void main() => config.generate();
