@@ -11,7 +11,7 @@ import 'package:native_toolchain_c/src/cbuilder/compiler_resolver.dart';
 
 const objCFlags = ['-x', 'objective-c', '-fobjc-arc'];
 
-const assetName = 'desktop_screenshot.dylib';
+const assetName = 'screenshot_desktop.dylib';
 
 final logger = Logger('')
   ..level = Level.INFO

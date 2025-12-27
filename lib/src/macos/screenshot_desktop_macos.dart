@@ -3,12 +3,12 @@ import 'dart:ffi';
 import 'dart:ffi' as ffi;
 import 'dart:typed_data';
 import 'package:objective_c/objective_c.dart' as objc;
-import '../desktop_screenshot_interface.dart';
+import '../screenshot_desktop_interface.dart';
 import '../monitor.dart';
 import 'bindings.g.dart';
 
-class DesktopScreenshotMacOS extends DesktopScreenshot {
-  DesktopScreenshotMacOS() : super();
+class ScreenshotDesktopMacOS extends ScreenshotDesktop {
+  ScreenshotDesktopMacOS() : super();
 
   @override
   bool hasPermission() {
@@ -194,8 +194,11 @@ class DesktopScreenshotMacOS extends DesktopScreenshot {
 
 class _MacosMonitor implements Monitor {
   final int displayId;
+  @override
   final String name;
+  @override
   final int width;
+  @override
   final int height;
   const _MacosMonitor({
     required this.displayId,

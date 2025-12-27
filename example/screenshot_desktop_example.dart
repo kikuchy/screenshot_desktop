@@ -1,11 +1,11 @@
-import 'package:desktop_screenshot/desktop_screenshot.dart';
+import 'package:screenshot_desktop/screenshot_desktop.dart';
 import 'dart:io';
 
 void main() async {
-  if (!DesktopScreenshot.instance.hasPermission()) {
-    await DesktopScreenshot.instance.requestPermission();
+  if (!ScreenshotDesktop.instance.hasPermission()) {
+    await ScreenshotDesktop.instance.requestPermission();
   }
-  final availableMonitors = await DesktopScreenshot.instance
+  final availableMonitors = await ScreenshotDesktop.instance
       .getAvailableMonitors();
 
   print('Available Monitors:');
@@ -17,7 +17,7 @@ void main() async {
     print(
       'Taking screenshot of the first monitor: ${availableMonitors.first.name}',
     );
-    final screenshot = await DesktopScreenshot.instance.takeScreenshot(
+    final screenshot = await ScreenshotDesktop.instance.takeScreenshot(
       availableMonitors.first,
     );
     await File('screenshot.png').writeAsBytes(screenshot);

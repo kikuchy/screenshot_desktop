@@ -1,15 +1,15 @@
 import 'dart:typed_data';
 import 'dart:io';
 import 'monitor.dart';
-import 'macos/desktop_screenshot_macos.dart';
+import 'macos/screenshot_desktop_macos.dart';
 
-abstract class DesktopScreenshot {
-  static DesktopScreenshot? _instance;
+abstract class ScreenshotDesktop {
+  static ScreenshotDesktop? _instance;
 
-  static DesktopScreenshot get instance {
+  static ScreenshotDesktop get instance {
     if (_instance != null) return _instance!;
     if (Platform.isMacOS) {
-      _instance = DesktopScreenshotMacOS();
+      _instance = ScreenshotDesktopMacOS();
     } else {
       throw UnsupportedError('Platform not supported');
     }
