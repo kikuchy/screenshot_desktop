@@ -16,7 +16,7 @@ Add `screenshot_desktop` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  screenshot_desktop: ^1.0.0
+  screenshot_desktop: ^1.0.0+1
 ```
 
 ## Usage
@@ -37,9 +37,8 @@ void main() async {
     // 2. Capture a specific monitor
     final screenshot = await ScreenshotDesktop.instance.takeScreenshot(monitors.first);
 
-    // 3. Save as a file (Windows: BMP, macOS: PNG)
-    final extension = Platform.isWindows ? 'bmp' : 'png';
-    await File('screenshot.$extension').writeAsBytes(screenshot);
+    // 3. Save as a file (BMP)
+    await File('screenshot.bmp').writeAsBytes(screenshot);
   }
 }
 ```
