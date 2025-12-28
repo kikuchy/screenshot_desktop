@@ -6,18 +6,11 @@ import 'dart:io';
 
 import 'package:code_assets/code_assets.dart';
 import 'package:hooks/hooks.dart';
-import 'package:logging/logging.dart';
 import 'package:native_toolchain_c/src/cbuilder/compiler_resolver.dart';
 
 const objCFlags = ['-x', 'objective-c', '-fobjc-arc'];
 
 const assetName = 'screenshot_desktop.dylib';
-
-final logger = Logger('')
-  ..level = Level.INFO
-  ..onRecord.listen((record) {
-    print('${record.level.name}: ${record.time}: ${record.message}');
-  });
 
 void main(List<String> args) async {
   await build(args, (input, output) async {
@@ -102,7 +95,7 @@ class Builder {
   static Future<Builder> create(BuildInput input, String rootDir) async {
     final resolver = CompilerResolver(
       codeConfig: input.config.code,
-      logger: logger,
+      logger: null,
     );
     return Builder._(
       (await resolver.resolveCompiler()).uri.toFilePath(),
@@ -134,15 +127,15 @@ class Builder {
 
   Future<void> _compile(List<String> flags, String output) async {
     final args = [...flags, '-o', output];
-    logger.info('Running: $_comp ${args.join(" ")}');
+    print('Running: $_comp ${args.join(" ")}');
     final proc = await Process.run(_comp, args);
-    logger.info(proc.stdout);
-    logger.info(proc.stderr);
+    print(proc.stdout);
+    print(proc.stderr);
     if (proc.exitCode != 0) {
       exitCode = proc.exitCode;
       throw Exception('Command failed: $_comp ${args.join(" ")}');
     }
-    logger.info('Generated $output');
+    print('Generated $output');
   }
 }
 
