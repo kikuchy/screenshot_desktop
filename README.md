@@ -1,4 +1,4 @@
-# desktop_screenshot
+# screenshot_desktop
 
 A Dart package for taking desktop screenshots on macOS and Windows.
 
@@ -12,17 +12,38 @@ Unlike many other screenshot packages, this one **does not depend on Flutter**. 
 
 ## Getting started
 
-Add `desktop_screenshot` to your `pubspec.yaml`:
+Add `screenshot_desktop` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  desktop_screenshot: any
+  screenshot_desktop: ^1.0.0
 ```
 
 ## Usage
 
-To be documented
+```dart
+import 'package:screenshot_desktop/screenshot_desktop.dart';
+import 'dart:io';
+
+void main() async {
+  // 1. Get available monitors
+  final monitors = await ScreenshotDesktop.instance.getAvailableMonitors();
+
+  for (final monitor in monitors) {
+    print('Monitor: ${monitor.name} (${monitor.width}x${monitor.height})');
+  }
+
+  if (monitors.isNotEmpty) {
+    // 2. Capture a specific monitor
+    final screenshot = await ScreenshotDesktop.instance.takeScreenshot(monitors.first);
+
+    // 3. Save as a file (Windows: BMP, macOS: PNG)
+    final extension = Platform.isWindows ? 'bmp' : 'png';
+    await File('screenshot.$extension').writeAsBytes(screenshot);
+  }
+}
+```
 
 ## Additional information
 
-For more information, issues, or contributions, please visit the repository.
+For more information, issues, or contributions, please visit the [repository](https://github.com/kikuchy/screenshot_desktop).
