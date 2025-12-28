@@ -45,6 +45,8 @@ final config = FfiGenerator(
       'SCScreenshotOutput',
       // AppKit
       'NSScreen',
+      // UniformTypeIdentifiers
+      'UTType',
     }),
   ),
   output: Output(
@@ -63,8 +65,10 @@ final config = FfiGenerator(
     'CFDataCreateMutable',
     'CFDataGetLength',
     'CFDataGetBytePtr',
+    // CoreFoundation
+    'CFStringCreateWithCString',
   }),
-  globals: Globals.includeSet({'kUTTypePNG', 'UTTypePNG'}),
+  globals: Globals.includeSet({'kUTTypeBMP', 'UTTypeBMP'}),
   typedefs: Typedefs.includeSet({}),
   enums: Enums.includeSet({}),
 );

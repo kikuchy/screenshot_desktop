@@ -112,7 +112,7 @@ class ScreenshotDesktopMacOS extends ScreenshotDesktop {
     final pixelCompleter = Completer<Uint8List>();
 
     final config = SCScreenshotConfiguration.alloc().init();
-    config.contentType = UTTypePNG;
+    config.contentType = UTTypeBMP;
     config.destinationRect = display.frame;
 
     SCScreenshotManager.captureScreenshotWithFilter(
@@ -140,8 +140,8 @@ class ScreenshotDesktopMacOS extends ScreenshotDesktop {
           return;
         }
         try {
-          final pngData = _convertCGImageToPng(sdrImage);
-          pixelCompleter.complete(pngData);
+          final bmpData = _convertCGImageToBmp(sdrImage);
+          pixelCompleter.complete(bmpData);
         } catch (e) {
           pixelCompleter.completeError(e);
         }
@@ -151,7 +151,7 @@ class ScreenshotDesktopMacOS extends ScreenshotDesktop {
     return pixelCompleter.future;
   }
 
-  Uint8List _convertCGImageToPng(ffi.Pointer<CGImage> cgImage) {
+  Uint8List _convertCGImageToBmp(ffi.Pointer<CGImage> cgImage) {
     if (cgImage == ffi.nullptr) throw ArgumentError('cgImage is null');
 
     final mutableData = CFDataCreateMutable(ffi.nullptr, 0);
@@ -161,7 +161,7 @@ class ScreenshotDesktopMacOS extends ScreenshotDesktop {
 
     final destination = CGImageDestinationCreateWithData(
       mutableData,
-      kUTTypePNG,
+      kUTTypeBMP,
       1,
       ffi.nullptr,
     );

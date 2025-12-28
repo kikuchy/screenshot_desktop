@@ -20,7 +20,7 @@ void main() async {
     final screenshot = await ScreenshotDesktop.instance.takeScreenshot(
       availableMonitors.first,
     );
-    await File('screenshot.png').writeAsBytes(screenshot);
-    print('Screenshot saved to screenshot.png');
+    await File('screenshot.bmp').writeAsBytes(screenshot);
+    print('Screenshot saved to screenshot.bmp');
   }
 }

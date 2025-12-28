@@ -25,8 +25,21 @@ external ffi.Pointer<ffi.UnsignedChar> CFDataGetBytePtr(
   ffi.Pointer<__CFData> theData,
 );
 
+@ffi.Native<
+  ffi.Pointer<objc.CFString> Function(
+    ffi.Pointer<__CFAllocator>,
+    ffi.Pointer<ffi.Char>,
+    ffi.UnsignedInt,
+  )
+>()
+external ffi.Pointer<objc.CFString> CFStringCreateWithCString(
+  ffi.Pointer<__CFAllocator> alloc,
+  ffi.Pointer<ffi.Char> cStr,
+  int encoding,
+);
+
 @ffi.Native<ffi.Pointer<objc.CFString>>()
-external ffi.Pointer<objc.CFString> kUTTypePNG;
+external ffi.Pointer<objc.CFString> kUTTypeBMP;
 
 @ffi.Native<ffi.Bool Function()>()
 external bool CGPreflightScreenCaptureAccess();
@@ -86,6 +99,60 @@ _NativeLibrary_wrapBlockingBlock_pfv6jd(
 );
 
 @ffi.Native<
+  ffi.Bool Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<ffi.Void>)
+>()
+external bool _NativeLibrary_protocolTrampoline_e3qsqz(
+  ffi.Pointer<objc.ObjCObjectImpl> target,
+  ffi.Pointer<ffi.Void> arg0,
+);
+
+@ffi.Native<
+  ffi.Pointer<objc.ObjCBlockImpl> Function(ffi.Pointer<objc.ObjCBlockImpl>)
+>(isLeaf: true)
+external ffi.Pointer<objc.ObjCBlockImpl>
+_NativeLibrary_wrapListenerBlock_18v1jvf(ffi.Pointer<objc.ObjCBlockImpl> block);
+
+@ffi.Native<
+  ffi.Pointer<objc.ObjCBlockImpl> Function(
+    ffi.Pointer<objc.ObjCBlockImpl>,
+    ffi.Pointer<objc.ObjCBlockImpl>,
+    ffi.Pointer<objc.DOBJC_Context>,
+  )
+>(isLeaf: true)
+external ffi.Pointer<objc.ObjCBlockImpl>
+_NativeLibrary_wrapBlockingBlock_18v1jvf(
+  ffi.Pointer<objc.ObjCBlockImpl> block,
+  ffi.Pointer<objc.ObjCBlockImpl> listnerBlock,
+  ffi.Pointer<objc.DOBJC_Context> context,
+);
+
+@ffi.Native<
+  ffi.Void Function(
+    ffi.Pointer<objc.ObjCObjectImpl>,
+    ffi.Pointer<ffi.Void>,
+    ffi.Pointer<objc.ObjCObjectImpl>,
+  )
+>()
+external void _NativeLibrary_protocolTrampoline_18v1jvf(
+  ffi.Pointer<objc.ObjCObjectImpl> target,
+  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<objc.ObjCObjectImpl> arg1,
+);
+
+@ffi.Native<
+  instancetype Function(
+    ffi.Pointer<objc.ObjCObjectImpl>,
+    ffi.Pointer<ffi.Void>,
+    ffi.Pointer<objc.ObjCObjectImpl>,
+  )
+>()
+external instancetype _NativeLibrary_protocolTrampoline_xr62hr(
+  ffi.Pointer<objc.ObjCObjectImpl> target,
+  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<objc.ObjCObjectImpl> arg1,
+);
+
+@ffi.Native<
   ffi.Pointer<objc.ObjCBlockImpl> Function(ffi.Pointer<objc.ObjCBlockImpl>)
 >(isLeaf: true)
 external ffi.Pointer<objc.ObjCBlockImpl>
@@ -125,15 +192,15 @@ _NativeLibrary_wrapBlockingBlock_19ugjh7(
   ffi.Pointer<objc.DOBJC_Context> context,
 );
 
-@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'UTTypePNG')
-external ffi.Pointer<objc.ObjCObjectImpl> _UTTypePNG;
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'UTTypeBMP')
+external ffi.Pointer<objc.ObjCObjectImpl> _UTTypeBMP;
 
-UTType get UTTypePNG =>
-    UTType.fromPointer(_UTTypePNG, retain: true, release: true);
+UTType get UTTypeBMP =>
+    UTType.fromPointer(_UTTypeBMP, retain: true, release: true);
 
-set UTTypePNG(UTType value) {
-  UTType.fromPointer(_UTTypePNG, retain: false, release: true).ref.release();
-  _UTTypePNG = value.ref.retainAndReturnPointer();
+set UTTypeBMP(UTType value) {
+  UTType.fromPointer(_UTTypeBMP, retain: false, release: true).ref.release();
+  _UTTypeBMP = value.ref.retainAndReturnPointer();
 }
 
 final class __CFAllocator extends ffi.Opaque {}
@@ -2786,30 +2853,134 @@ final _objc_msgSend_1wrfi5l = objc.msgSendPointer
         int,
       )
     >();
+late final _class_UTType = objc.getClass("UTType");
+late final _sel_typeWithIdentifier_ = objc.registerName("typeWithIdentifier:");
+late final _sel_typeWithFilenameExtension_ = objc.registerName(
+  "typeWithFilenameExtension:",
+);
+late final _sel_typeWithFilenameExtension_conformingToType_ = objc.registerName(
+  "typeWithFilenameExtension:conformingToType:",
+);
+late final _sel_typeWithMIMEType_ = objc.registerName("typeWithMIMEType:");
+late final _sel_typeWithMIMEType_conformingToType_ = objc.registerName(
+  "typeWithMIMEType:conformingToType:",
+);
+late final _sel_identifier = objc.registerName("identifier");
+late final _sel_preferredFilenameExtension = objc.registerName(
+  "preferredFilenameExtension",
+);
+late final _sel_preferredMIMEType = objc.registerName("preferredMIMEType");
+late final _sel_localizedDescription = objc.registerName(
+  "localizedDescription",
+);
+late final _sel_version = objc.registerName("version");
+late final _sel_referenceURL = objc.registerName("referenceURL");
+late final _sel_isDynamic = objc.registerName("isDynamic");
+late final _sel_isDeclared = objc.registerName("isDeclared");
+late final _sel_isPublicType = objc.registerName("isPublicType");
+late final _sel_supportsSecureCoding = objc.registerName(
+  "supportsSecureCoding",
+);
 
-/// WARNING: UTType is a stub. To generate bindings for this class, include
-/// UTType in your config's objc-interfaces list.
-///
-/// UTType
-extension type UTType._(objc.ObjCObject object$)
-    implements
-        objc.ObjCObject,
-        objc.NSObject,
-        objc.NSCopying,
-        objc.NSSecureCoding {
-  /// Constructs a [UTType] that points to the same underlying object as [other].
-  UTType.as(objc.ObjCObject other) : object$ = other {}
-
-  /// Constructs a [UTType] that wraps the given raw object pointer.
-  UTType.fromPointer(
-    ffi.Pointer<objc.ObjCObjectImpl> other, {
+/// Construction methods for `objc.ObjCBlock<ffi.Bool Function(ffi.Pointer<ffi.Void>)>`.
+abstract final class ObjCBlock_bool_ffiVoid {
+  /// Returns a block that wraps the given raw block pointer.
+  static objc.ObjCBlock<ffi.Bool Function(ffi.Pointer<ffi.Void>)> fromPointer(
+    ffi.Pointer<objc.ObjCBlockImpl> pointer, {
     bool retain = false,
     bool release = false,
-  }) : object$ = objc.ObjCObject(other, retain: retain, release: release) {}
+  }) => objc.ObjCBlock<ffi.Bool Function(ffi.Pointer<ffi.Void>)>(
+    pointer,
+    retain: retain,
+    release: release,
+  );
+
+  /// Creates a block from a C function pointer.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  static objc.ObjCBlock<ffi.Bool Function(ffi.Pointer<ffi.Void>)>
+  fromFunctionPointer(
+    ffi.Pointer<
+      ffi.NativeFunction<ffi.Bool Function(ffi.Pointer<ffi.Void> arg0)>
+    >
+    ptr,
+  ) => objc.ObjCBlock<ffi.Bool Function(ffi.Pointer<ffi.Void>)>(
+    objc.newPointerBlock(_fnPtrCallable, ptr.cast()),
+    retain: false,
+    release: true,
+  );
+
+  /// Creates a block from a Dart function.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<ffi.Bool Function(ffi.Pointer<ffi.Void>)> fromFunction(
+    bool Function(ffi.Pointer<ffi.Void>) fn, {
+    bool keepIsolateAlive = true,
+  }) => objc.ObjCBlock<ffi.Bool Function(ffi.Pointer<ffi.Void>)>(
+    objc.newClosureBlock(
+      _closureCallable,
+      (ffi.Pointer<ffi.Void> arg0) => fn(arg0),
+      keepIsolateAlive,
+    ),
+    retain: false,
+    release: true,
+  );
+
+  static bool _fnPtrTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+  ) => block.ref.target
+      .cast<ffi.NativeFunction<ffi.Bool Function(ffi.Pointer<ffi.Void> arg0)>>()
+      .asFunction<bool Function(ffi.Pointer<ffi.Void>)>()(arg0);
+  static ffi.Pointer<ffi.Void> _fnPtrCallable =
+      ffi.Pointer.fromFunction<
+            ffi.Bool Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+            )
+          >(_fnPtrTrampoline, false)
+          .cast();
+  static bool _closureTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+  ) => (objc.getBlockClosure(block) as bool Function(ffi.Pointer<ffi.Void>))(
+    arg0,
+  );
+  static ffi.Pointer<ffi.Void> _closureCallable =
+      ffi.Pointer.fromFunction<
+            ffi.Bool Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+            )
+          >(_closureTrampoline, false)
+          .cast();
 }
 
-late final _sel_contentType = objc.registerName("contentType");
-late final _sel_setContentType_ = objc.registerName("setContentType:");
+/// Call operator for `objc.ObjCBlock<ffi.Bool Function(ffi.Pointer<ffi.Void>)>`.
+extension ObjCBlock_bool_ffiVoid$CallExtension
+    on objc.ObjCBlock<ffi.Bool Function(ffi.Pointer<ffi.Void>)> {
+  bool call(ffi.Pointer<ffi.Void> arg0) => ref.pointer.ref.invoke
+      .cast<
+        ffi.NativeFunction<
+          ffi.Bool Function(
+            ffi.Pointer<objc.ObjCBlockImpl> block,
+            ffi.Pointer<ffi.Void> arg0,
+          )
+        >
+      >()
+      .asFunction<
+        bool Function(ffi.Pointer<objc.ObjCBlockImpl>, ffi.Pointer<ffi.Void>)
+      >()(ref.pointer, arg0);
+}
+
+late final _sel_encodeWithCoder_ = objc.registerName("encodeWithCoder:");
 final _objc_msgSend_xtuoz7 = objc.msgSendPointer
     .cast<
       ffi.NativeFunction<
@@ -2827,6 +2998,1004 @@ final _objc_msgSend_xtuoz7 = objc.msgSendPointer
         ffi.Pointer<objc.ObjCObjectImpl>,
       )
     >();
+
+/// Construction methods for `objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>`.
+abstract final class ObjCBlock_ffiVoid_ffiVoid_NSCoder {
+  /// Returns a block that wraps the given raw block pointer.
+  static objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>
+  fromPointer(
+    ffi.Pointer<objc.ObjCBlockImpl> pointer, {
+    bool retain = false,
+    bool release = false,
+  }) => objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>(
+    pointer,
+    retain: retain,
+    release: release,
+  );
+
+  /// Creates a block from a C function pointer.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  static objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>
+  fromFunctionPointer(
+    ffi.Pointer<
+      ffi.NativeFunction<
+        ffi.Void Function(
+          ffi.Pointer<ffi.Void> arg0,
+          ffi.Pointer<objc.ObjCObjectImpl> arg1,
+        )
+      >
+    >
+    ptr,
+  ) => objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>(
+    objc.newPointerBlock(_fnPtrCallable, ptr.cast()),
+    retain: false,
+    release: true,
+  );
+
+  /// Creates a block from a Dart function.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>
+  fromFunction(
+    void Function(ffi.Pointer<ffi.Void>, objc.NSCoder) fn, {
+    bool keepIsolateAlive = true,
+  }) => objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>(
+    objc.newClosureBlock(
+      _closureCallable,
+      (ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1) =>
+          fn(arg0, objc.NSCoder.fromPointer(arg1, retain: true, release: true)),
+      keepIsolateAlive,
+    ),
+    retain: false,
+    release: true,
+  );
+
+  /// Creates a listener block from a Dart function.
+  ///
+  /// This is based on FFI's NativeCallable.listener, and has the same
+  /// capabilities and limitations. This block can be invoked from any thread,
+  /// but only supports void functions, and is not run synchronously. See
+  /// NativeCallable.listener for more details.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>
+  listener(
+    void Function(ffi.Pointer<ffi.Void>, objc.NSCoder) fn, {
+    bool keepIsolateAlive = true,
+  }) {
+    final raw = objc.newClosureBlock(
+      _listenerCallable.nativeFunction.cast(),
+      (ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1) => fn(
+        arg0,
+        objc.NSCoder.fromPointer(arg1, retain: false, release: true),
+      ),
+      keepIsolateAlive,
+    );
+    final wrapper = _NativeLibrary_wrapListenerBlock_18v1jvf(raw);
+    objc.objectRelease(raw.cast());
+    return objc.ObjCBlock<
+      ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)
+    >(wrapper, retain: false, release: true);
+  }
+
+  /// Creates a blocking block from a Dart function.
+  ///
+  /// This callback can be invoked from any native thread, and will block the
+  /// caller until the callback is handled by the Dart isolate that created
+  /// the block. Async functions are not supported.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC. If the owner isolate
+  /// has shut down, and the block is invoked by native code, it may block
+  /// indefinitely, or have other undefined behavior.
+  static objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>
+  blocking(
+    void Function(ffi.Pointer<ffi.Void>, objc.NSCoder) fn, {
+    bool keepIsolateAlive = true,
+  }) {
+    final raw = objc.newClosureBlock(
+      _blockingCallable.nativeFunction.cast(),
+      (ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1) => fn(
+        arg0,
+        objc.NSCoder.fromPointer(arg1, retain: false, release: true),
+      ),
+      keepIsolateAlive,
+    );
+    final rawListener = objc.newClosureBlock(
+      _blockingListenerCallable.nativeFunction.cast(),
+      (ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1) => fn(
+        arg0,
+        objc.NSCoder.fromPointer(arg1, retain: false, release: true),
+      ),
+      keepIsolateAlive,
+    );
+    final wrapper = _NativeLibrary_wrapBlockingBlock_18v1jvf(
+      raw,
+      rawListener,
+      objc.objCContext,
+    );
+    objc.objectRelease(raw.cast());
+    objc.objectRelease(rawListener.cast());
+    return objc.ObjCBlock<
+      ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)
+    >(wrapper, retain: false, release: true);
+  }
+
+  static void _listenerTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ) {
+    (objc.getBlockClosure(block)
+        as void Function(
+          ffi.Pointer<ffi.Void>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+        ))(arg0, arg1);
+    objc.objectRelease(block.cast());
+  }
+
+  static ffi.NativeCallable<
+    ffi.Void Function(
+      ffi.Pointer<objc.ObjCBlockImpl>,
+      ffi.Pointer<ffi.Void>,
+      ffi.Pointer<objc.ObjCObjectImpl>,
+    )
+  >
+  _listenerCallable =
+      ffi.NativeCallable<
+          ffi.Void Function(
+            ffi.Pointer<objc.ObjCBlockImpl>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+          )
+        >.listener(_listenerTrampoline)
+        ..keepIsolateAlive = false;
+  static void _blockingTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> waiter,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ) {
+    try {
+      (objc.getBlockClosure(block)
+          as void Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+          ))(arg0, arg1);
+    } catch (e) {
+    } finally {
+      objc.signalWaiter(waiter);
+      objc.objectRelease(block.cast());
+    }
+  }
+
+  static ffi.NativeCallable<
+    ffi.Void Function(
+      ffi.Pointer<objc.ObjCBlockImpl>,
+      ffi.Pointer<ffi.Void>,
+      ffi.Pointer<ffi.Void>,
+      ffi.Pointer<objc.ObjCObjectImpl>,
+    )
+  >
+  _blockingCallable =
+      ffi.NativeCallable<
+          ffi.Void Function(
+            ffi.Pointer<objc.ObjCBlockImpl>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+          )
+        >.isolateLocal(_blockingTrampoline)
+        ..keepIsolateAlive = false;
+  static ffi.NativeCallable<
+    ffi.Void Function(
+      ffi.Pointer<objc.ObjCBlockImpl>,
+      ffi.Pointer<ffi.Void>,
+      ffi.Pointer<ffi.Void>,
+      ffi.Pointer<objc.ObjCObjectImpl>,
+    )
+  >
+  _blockingListenerCallable =
+      ffi.NativeCallable<
+          ffi.Void Function(
+            ffi.Pointer<objc.ObjCBlockImpl>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+          )
+        >.listener(_blockingTrampoline)
+        ..keepIsolateAlive = false;
+  static void _fnPtrTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ) => block.ref.target
+      .cast<
+        ffi.NativeFunction<
+          ffi.Void Function(
+            ffi.Pointer<ffi.Void> arg0,
+            ffi.Pointer<objc.ObjCObjectImpl> arg1,
+          )
+        >
+      >()
+      .asFunction<
+        void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<objc.ObjCObjectImpl>)
+      >()(arg0, arg1);
+  static ffi.Pointer<ffi.Void> _fnPtrCallable =
+      ffi.Pointer.fromFunction<
+            ffi.Void Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_fnPtrTrampoline)
+          .cast();
+  static void _closureTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ) =>
+      (objc.getBlockClosure(block)
+          as void Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+          ))(arg0, arg1);
+  static ffi.Pointer<ffi.Void> _closureCallable =
+      ffi.Pointer.fromFunction<
+            ffi.Void Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_closureTrampoline)
+          .cast();
+}
+
+/// Call operator for `objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>`.
+extension ObjCBlock_ffiVoid_ffiVoid_NSCoder$CallExtension
+    on objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, objc.NSCoder)> {
+  void call(ffi.Pointer<ffi.Void> arg0, objc.NSCoder arg1) => ref
+      .pointer
+      .ref
+      .invoke
+      .cast<
+        ffi.NativeFunction<
+          ffi.Void Function(
+            ffi.Pointer<objc.ObjCBlockImpl> block,
+            ffi.Pointer<ffi.Void> arg0,
+            ffi.Pointer<objc.ObjCObjectImpl> arg1,
+          )
+        >
+      >()
+      .asFunction<
+        void Function(
+          ffi.Pointer<objc.ObjCBlockImpl>,
+          ffi.Pointer<ffi.Void>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+        )
+      >()(ref.pointer, arg0, arg1.ref.pointer);
+}
+
+late final _sel_initWithCoder_ = objc.registerName("initWithCoder:");
+
+/// Construction methods for `objc.ObjCBlock<objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>`.
+abstract final class ObjCBlock_instancetype_ffiVoid_NSCoder {
+  /// Returns a block that wraps the given raw block pointer.
+  static objc.ObjCBlock<
+    objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+      ffi.Pointer<ffi.Void>,
+      objc.NSCoder,
+    )
+  >
+  fromPointer(
+    ffi.Pointer<objc.ObjCBlockImpl> pointer, {
+    bool retain = false,
+    bool release = false,
+  }) =>
+      objc.ObjCBlock<
+        objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+          ffi.Pointer<ffi.Void>,
+          objc.NSCoder,
+        )
+      >(pointer, retain: retain, release: release);
+
+  /// Creates a block from a C function pointer.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  static objc.ObjCBlock<
+    objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+      ffi.Pointer<ffi.Void>,
+      objc.NSCoder,
+    )
+  >
+  fromFunctionPointer(
+    ffi.Pointer<
+      ffi.NativeFunction<
+        instancetype Function(
+          ffi.Pointer<ffi.Void> arg0,
+          ffi.Pointer<objc.ObjCObjectImpl> arg1,
+        )
+      >
+    >
+    ptr,
+  ) =>
+      objc.ObjCBlock<
+        objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+          ffi.Pointer<ffi.Void>,
+          objc.NSCoder,
+        )
+      >(
+        objc.newPointerBlock(_fnPtrCallable, ptr.cast()),
+        retain: false,
+        release: true,
+      );
+
+  /// Creates a block from a Dart function.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<
+    objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+      ffi.Pointer<ffi.Void>,
+      objc.NSCoder,
+    )
+  >
+  fromFunction(
+    Dartinstancetype? Function(ffi.Pointer<ffi.Void>, objc.NSCoder) fn, {
+    bool keepIsolateAlive = true,
+  }) =>
+      objc.ObjCBlock<
+        objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+          ffi.Pointer<ffi.Void>,
+          objc.NSCoder,
+        )
+      >(
+        objc.newClosureBlock(
+          _closureCallable,
+          (ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1) =>
+              fn(
+                arg0,
+                objc.NSCoder.fromPointer(arg1, retain: true, release: true),
+              )?.ref.retainAndReturnPointer() ??
+              ffi.nullptr,
+          keepIsolateAlive,
+        ),
+        retain: false,
+        release: true,
+      );
+
+  static instancetype _fnPtrTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ) => block.ref.target
+      .cast<
+        ffi.NativeFunction<
+          instancetype Function(
+            ffi.Pointer<ffi.Void> arg0,
+            ffi.Pointer<objc.ObjCObjectImpl> arg1,
+          )
+        >
+      >()
+      .asFunction<
+        instancetype Function(
+          ffi.Pointer<ffi.Void>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+        )
+      >()(arg0, arg1);
+  static ffi.Pointer<ffi.Void> _fnPtrCallable =
+      ffi.Pointer.fromFunction<
+            instancetype Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_fnPtrTrampoline)
+          .cast();
+  static instancetype _closureTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ) =>
+      (objc.getBlockClosure(block)
+          as instancetype Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+          ))(arg0, arg1);
+  static ffi.Pointer<ffi.Void> _closureCallable =
+      ffi.Pointer.fromFunction<
+            instancetype Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_closureTrampoline)
+          .cast();
+}
+
+/// Call operator for `objc.ObjCBlock<objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(ffi.Pointer<ffi.Void>, objc.NSCoder)>`.
+extension ObjCBlock_instancetype_ffiVoid_NSCoder$CallExtension
+    on
+        objc.ObjCBlock<
+          objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+            ffi.Pointer<ffi.Void>,
+            objc.NSCoder,
+          )
+        > {
+  Dartinstancetype? call(ffi.Pointer<ffi.Void> arg0, objc.NSCoder arg1) =>
+      ref.pointer.ref.invoke
+              .cast<
+                ffi.NativeFunction<
+                  instancetype Function(
+                    ffi.Pointer<objc.ObjCBlockImpl> block,
+                    ffi.Pointer<ffi.Void> arg0,
+                    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+                  )
+                >
+              >()
+              .asFunction<
+                instancetype Function(
+                  ffi.Pointer<objc.ObjCBlockImpl>,
+                  ffi.Pointer<ffi.Void>,
+                  ffi.Pointer<objc.ObjCObjectImpl>,
+                )
+              >()(ref.pointer, arg0, arg1.ref.pointer)
+              .address ==
+          0
+      ? null
+      : objc.ObjCObject(
+          ref.pointer.ref.invoke
+              .cast<
+                ffi.NativeFunction<
+                  instancetype Function(
+                    ffi.Pointer<objc.ObjCBlockImpl> block,
+                    ffi.Pointer<ffi.Void> arg0,
+                    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+                  )
+                >
+              >()
+              .asFunction<
+                instancetype Function(
+                  ffi.Pointer<objc.ObjCBlockImpl>,
+                  ffi.Pointer<ffi.Void>,
+                  ffi.Pointer<objc.ObjCObjectImpl>,
+                )
+              >()(ref.pointer, arg0, arg1.ref.pointer),
+          retain: false,
+          release: true,
+        );
+}
+
+late final _sel_typeWithTag_tagClass_conformingToType_ = objc.registerName(
+  "typeWithTag:tagClass:conformingToType:",
+);
+late final _sel_conformsToType_ = objc.registerName("conformsToType:");
+late final _sel_isSupertypeOfType_ = objc.registerName("isSupertypeOfType:");
+late final _sel_isSubtypeOfType_ = objc.registerName("isSubtypeOfType:");
+late final _sel_supertypes = objc.registerName("supertypes");
+
+/// Conformance
+extension Conformance on UTType {
+  /// conformsToType:
+  bool conformsToType(UTType type) {
+    objc.checkOsVersionInternal(
+      'UTType.conformsToType:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    return _objc_msgSend_19nvye5(
+      object$.ref.pointer,
+      _sel_conformsToType_,
+      type.ref.pointer,
+    );
+  }
+
+  /// isSubtypeOfType:
+  bool isSubtypeOfType(UTType type) {
+    objc.checkOsVersionInternal(
+      'UTType.isSubtypeOfType:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    return _objc_msgSend_19nvye5(
+      object$.ref.pointer,
+      _sel_isSubtypeOfType_,
+      type.ref.pointer,
+    );
+  }
+
+  /// isSupertypeOfType:
+  bool isSupertypeOfType(UTType type) {
+    objc.checkOsVersionInternal(
+      'UTType.isSupertypeOfType:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    return _objc_msgSend_19nvye5(
+      object$.ref.pointer,
+      _sel_isSupertypeOfType_,
+      type.ref.pointer,
+    );
+  }
+
+  /// supertypes
+  objc.NSSet get supertypes {
+    objc.checkOsVersionInternal(
+      'UTType.supertypes',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_supertypes);
+    return objc.NSSet.fromPointer($ret, retain: true, release: true);
+  }
+}
+
+late final _sel_typesWithTag_tagClass_conformingToType_ = objc.registerName(
+  "typesWithTag:tagClass:conformingToType:",
+);
+late final _sel_tags = objc.registerName("tags");
+
+/// UTTagSpecification
+extension UTTagSpecification on UTType {
+  /// tags
+  objc.NSDictionary get tags {
+    objc.checkOsVersionInternal(
+      'UTType.tags',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_tags);
+    return objc.NSDictionary.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// typesWithTag:tagClass:conformingToType:
+  static objc.NSArray typesWithTag(
+    objc.NSString tag, {
+    required objc.NSString tagClass,
+    UTType? conformingToType,
+  }) {
+    objc.checkOsVersionInternal(
+      'UTType.typesWithTag:tagClass:conformingToType:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_11spmsz(
+      _class_UTType,
+      _sel_typesWithTag_tagClass_conformingToType_,
+      tag.ref.pointer,
+      tagClass.ref.pointer,
+      conformingToType?.ref.pointer ?? ffi.nullptr,
+    );
+    return objc.NSArray.fromPointer($ret, retain: true, release: true);
+  }
+}
+
+late final _sel_exportedTypeWithIdentifier_ = objc.registerName(
+  "exportedTypeWithIdentifier:",
+);
+late final _sel_exportedTypeWithIdentifier_conformingToType_ = objc
+    .registerName("exportedTypeWithIdentifier:conformingToType:");
+late final _sel_importedTypeWithIdentifier_ = objc.registerName(
+  "importedTypeWithIdentifier:",
+);
+late final _sel_importedTypeWithIdentifier_conformingToType_ = objc
+    .registerName("importedTypeWithIdentifier:conformingToType:");
+
+/// LocalConstants
+extension LocalConstants on UTType {
+  /// exportedTypeWithIdentifier:
+  static UTType exportedTypeWithIdentifier(objc.NSString identifier) {
+    objc.checkOsVersionInternal(
+      'UTType.exportedTypeWithIdentifier:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_1sotr3r(
+      _class_UTType,
+      _sel_exportedTypeWithIdentifier_,
+      identifier.ref.pointer,
+    );
+    return UTType.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// exportedTypeWithIdentifier:conformingToType:
+  static UTType exportedTypeWithIdentifier$1(
+    objc.NSString identifier, {
+    required UTType conformingToType,
+  }) {
+    objc.checkOsVersionInternal(
+      'UTType.exportedTypeWithIdentifier:conformingToType:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_15qeuct(
+      _class_UTType,
+      _sel_exportedTypeWithIdentifier_conformingToType_,
+      identifier.ref.pointer,
+      conformingToType.ref.pointer,
+    );
+    return UTType.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// importedTypeWithIdentifier:
+  static UTType importedTypeWithIdentifier(objc.NSString identifier) {
+    objc.checkOsVersionInternal(
+      'UTType.importedTypeWithIdentifier:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_1sotr3r(
+      _class_UTType,
+      _sel_importedTypeWithIdentifier_,
+      identifier.ref.pointer,
+    );
+    return UTType.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// importedTypeWithIdentifier:conformingToType:
+  static UTType importedTypeWithIdentifier$1(
+    objc.NSString identifier, {
+    required UTType conformingToType,
+  }) {
+    objc.checkOsVersionInternal(
+      'UTType.importedTypeWithIdentifier:conformingToType:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_15qeuct(
+      _class_UTType,
+      _sel_importedTypeWithIdentifier_conformingToType_,
+      identifier.ref.pointer,
+      conformingToType.ref.pointer,
+    );
+    return UTType.fromPointer($ret, retain: true, release: true);
+  }
+}
+
+/// UTType
+extension type UTType._(objc.ObjCObject object$)
+    implements
+        objc.ObjCObject,
+        objc.NSObject,
+        objc.NSCopying,
+        objc.NSSecureCoding {
+  /// Constructs a [UTType] that points to the same underlying object as [other].
+  UTType.as(objc.ObjCObject other) : object$ = other {
+    assert(isA(object$));
+  }
+
+  /// Constructs a [UTType] that wraps the given raw object pointer.
+  UTType.fromPointer(
+    ffi.Pointer<objc.ObjCObjectImpl> other, {
+    bool retain = false,
+    bool release = false,
+  }) : object$ = objc.ObjCObject(other, retain: retain, release: release) {
+    assert(isA(object$));
+  }
+
+  /// Returns whether [obj] is an instance of [UTType].
+  static bool isA(objc.ObjCObject obj) => _objc_msgSend_19nvye5(
+    obj.ref.pointer,
+    _sel_isKindOfClass_,
+    _class_UTType,
+  );
+
+  /// alloc
+  static UTType alloc() {
+    final $ret = _objc_msgSend_151sglz(_class_UTType, _sel_alloc);
+    return UTType.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static UTType allocWithZone(ffi.Pointer<objc.NSZone> zone) {
+    final $ret = _objc_msgSend_1cwp428(
+      _class_UTType,
+      _sel_allocWithZone_,
+      zone,
+    );
+    return UTType.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// new
+  static UTType new$() {
+    final $ret = _objc_msgSend_151sglz(_class_UTType, _sel_new);
+    return UTType.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// supportsSecureCoding
+  static bool getSupportsSecureCoding() {
+    return _objc_msgSend_91o635(_class_UTType, _sel_supportsSecureCoding);
+  }
+
+  /// typeWithFilenameExtension:
+  static UTType? typeWithFilenameExtension(objc.NSString filenameExtension) {
+    objc.checkOsVersionInternal(
+      'UTType.typeWithFilenameExtension:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_1sotr3r(
+      _class_UTType,
+      _sel_typeWithFilenameExtension_,
+      filenameExtension.ref.pointer,
+    );
+    return $ret.address == 0
+        ? null
+        : UTType.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// typeWithFilenameExtension:conformingToType:
+  static UTType? typeWithFilenameExtension$1(
+    objc.NSString filenameExtension, {
+    required UTType conformingToType,
+  }) {
+    objc.checkOsVersionInternal(
+      'UTType.typeWithFilenameExtension:conformingToType:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_15qeuct(
+      _class_UTType,
+      _sel_typeWithFilenameExtension_conformingToType_,
+      filenameExtension.ref.pointer,
+      conformingToType.ref.pointer,
+    );
+    return $ret.address == 0
+        ? null
+        : UTType.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// typeWithIdentifier:
+  static UTType? typeWithIdentifier(objc.NSString identifier) {
+    objc.checkOsVersionInternal(
+      'UTType.typeWithIdentifier:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_1sotr3r(
+      _class_UTType,
+      _sel_typeWithIdentifier_,
+      identifier.ref.pointer,
+    );
+    return $ret.address == 0
+        ? null
+        : UTType.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// typeWithMIMEType:
+  static UTType? typeWithMIMEType(objc.NSString mimeType) {
+    objc.checkOsVersionInternal(
+      'UTType.typeWithMIMEType:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_1sotr3r(
+      _class_UTType,
+      _sel_typeWithMIMEType_,
+      mimeType.ref.pointer,
+    );
+    return $ret.address == 0
+        ? null
+        : UTType.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// typeWithMIMEType:conformingToType:
+  static UTType? typeWithMIMEType$1(
+    objc.NSString mimeType, {
+    required UTType conformingToType,
+  }) {
+    objc.checkOsVersionInternal(
+      'UTType.typeWithMIMEType:conformingToType:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_15qeuct(
+      _class_UTType,
+      _sel_typeWithMIMEType_conformingToType_,
+      mimeType.ref.pointer,
+      conformingToType.ref.pointer,
+    );
+    return $ret.address == 0
+        ? null
+        : UTType.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// typeWithTag:tagClass:conformingToType:
+  static UTType? typeWithTag(
+    objc.NSString tag, {
+    required objc.NSString tagClass,
+    UTType? conformingToType,
+  }) {
+    objc.checkOsVersionInternal(
+      'UTType.typeWithTag:tagClass:conformingToType:',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_11spmsz(
+      _class_UTType,
+      _sel_typeWithTag_tagClass_conformingToType_,
+      tag.ref.pointer,
+      tagClass.ref.pointer,
+      conformingToType?.ref.pointer ?? ffi.nullptr,
+    );
+    return $ret.address == 0
+        ? null
+        : UTType.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// Returns a new instance of UTType constructed with the default `new` method.
+  UTType() : this.as(new$().object$);
+}
+
+extension UTType$Methods on UTType {
+  /// encodeWithCoder:
+  void encodeWithCoder(objc.NSCoder coder) {
+    _objc_msgSend_xtuoz7(
+      object$.ref.pointer,
+      _sel_encodeWithCoder_,
+      coder.ref.pointer,
+    );
+  }
+
+  /// identifier
+  objc.NSString get identifier {
+    objc.checkOsVersionInternal(
+      'UTType.identifier',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_identifier);
+    return objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// init
+  UTType init() {
+    objc.checkOsVersionInternal(
+      'UTType.init',
+      iOS: (false, (2, 0, 0)),
+      macOS: (false, (10, 0, 0)),
+    );
+    final $ret = _objc_msgSend_151sglz(
+      object$.ref.retainAndReturnPointer(),
+      _sel_init,
+    );
+    return UTType.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// initWithCoder:
+  UTType? initWithCoder(objc.NSCoder coder) {
+    final $ret = _objc_msgSend_1sotr3r(
+      object$.ref.retainAndReturnPointer(),
+      _sel_initWithCoder_,
+      coder.ref.pointer,
+    );
+    return $ret.address == 0
+        ? null
+        : UTType.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// isDeclared
+  bool get isDeclared {
+    objc.checkOsVersionInternal(
+      'UTType.isDeclared',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    return _objc_msgSend_91o635(object$.ref.pointer, _sel_isDeclared);
+  }
+
+  /// isDynamic
+  bool get isDynamic {
+    objc.checkOsVersionInternal(
+      'UTType.isDynamic',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    return _objc_msgSend_91o635(object$.ref.pointer, _sel_isDynamic);
+  }
+
+  /// isPublicType
+  bool get isPublicType {
+    objc.checkOsVersionInternal(
+      'UTType.isPublicType',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    return _objc_msgSend_91o635(object$.ref.pointer, _sel_isPublicType);
+  }
+
+  /// localizedDescription
+  objc.NSString? get localizedDescription {
+    objc.checkOsVersionInternal(
+      'UTType.localizedDescription',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_151sglz(
+      object$.ref.pointer,
+      _sel_localizedDescription,
+    );
+    return $ret.address == 0
+        ? null
+        : objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// preferredFilenameExtension
+  objc.NSString? get preferredFilenameExtension {
+    objc.checkOsVersionInternal(
+      'UTType.preferredFilenameExtension',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_151sglz(
+      object$.ref.pointer,
+      _sel_preferredFilenameExtension,
+    );
+    return $ret.address == 0
+        ? null
+        : objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// preferredMIMEType
+  objc.NSString? get preferredMIMEType {
+    objc.checkOsVersionInternal(
+      'UTType.preferredMIMEType',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_151sglz(
+      object$.ref.pointer,
+      _sel_preferredMIMEType,
+    );
+    return $ret.address == 0
+        ? null
+        : objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// referenceURL
+  objc.NSURL? get referenceURL {
+    objc.checkOsVersionInternal(
+      'UTType.referenceURL',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_referenceURL);
+    return $ret.address == 0
+        ? null
+        : objc.NSURL.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// version
+  objc.NSNumber? get version {
+    objc.checkOsVersionInternal(
+      'UTType.version',
+      iOS: (false, (14, 0, 0)),
+      macOS: (false, (11, 0, 0)),
+    );
+    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_version);
+    return $ret.address == 0
+        ? null
+        : objc.NSNumber.fromPointer($ret, retain: true, release: true);
+  }
+}
+
+late final _sel_contentType = objc.registerName("contentType");
+late final _sel_setContentType_ = objc.registerName("setContentType:");
 late final _sel_fileURL = objc.registerName("fileURL");
 late final _sel_setFileURL_ = objc.registerName("setFileURL:");
 late final _sel_supportedContentTypes = objc.registerName(
