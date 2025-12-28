@@ -7,6 +7,9 @@ import 'package:win32/win32.dart';
 import '../screenshot_desktop_interface.dart';
 import '../monitor.dart';
 
+/// The Windows implementation of [ScreenshotDesktop].
+///
+/// This implementation uses GDI and Win32 APIs to capture screenshots.
 class ScreenshotDesktopWindows extends ScreenshotDesktop {
   @override
   bool hasPermission() => true;

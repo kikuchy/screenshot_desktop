@@ -7,6 +7,9 @@ import '../screenshot_desktop_interface.dart';
 import '../monitor.dart';
 import 'bindings.g.dart';
 
+/// The macOS implementation of [ScreenshotDesktop].
+///
+/// This implementation uses ScreenCaptureKit to capture high-quality screenshots.
 class ScreenshotDesktopMacOS extends ScreenshotDesktop {
   ScreenshotDesktopMacOS() : super();
 
