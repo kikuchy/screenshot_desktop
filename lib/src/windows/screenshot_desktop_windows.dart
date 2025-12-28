@@ -16,6 +16,7 @@ class ScreenshotDesktopWindows extends ScreenshotDesktop {
 
   @override
   Future<List<Monitor>> getAvailableMonitors() async {
+    SetProcessDPIAware();
     final monitors = <Monitor>[];
 
     final lpEnumFunc =
@@ -68,6 +69,7 @@ class ScreenshotDesktopWindows extends ScreenshotDesktop {
 
   @override
   Future<Uint8List> takeScreenshot(Monitor monitor) async {
+    SetProcessDPIAware();
     if (monitor is! _WindowsMonitor) {
       throw ArgumentError('Invalid monitor type');
     }
