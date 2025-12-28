@@ -13,6 +13,7 @@ dependencies:
   hooks: ^0.20.5
   code_assets: ^0.19.10
   ffi: ^2.1.4
+  win32: ^5.15.0
 
 dev_dependencies:
   lints: ^6.0.0
