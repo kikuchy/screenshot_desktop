@@ -1,6 +1,6 @@
 name: screenshot_desktop
-description: A pure Dart package for capturing high-resolution desktop screenshots on macOS and Windows, with multi-monitor support.
-version: 1.0.0+1
+description: A pure Dart package for capturing high-resolution desktop screenshots and individual windows on macOS and Windows, with multi-monitor support.
+version: 1.1.0
 homepage: https://github.com/kikuchy/screenshot_desktop
 repository: https://github.com/kikuchy/screenshot_desktop
 

@@ -8,6 +8,7 @@ Unlike many other screenshot packages, this one **does not depend on Flutter**. 
 
 - **Multi-monitor support**: List all available monitors and their resolutions.
 - **Specific monitor capture**: Take a high-resolution screenshot of a specific monitor.
+- **Window capture**: List all available windows and capture screenshots of specific windows.
 - **Pure Dart**: No Flutter dependency required.
 
 ## Getting started
@@ -16,10 +17,12 @@ Add `screenshot_desktop` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  screenshot_desktop: ^1.0.0+1
+  screenshot_desktop: ^1.1.0
 ```
 
 ## Usage
+
+### Monitor Screenshot
 
 ```dart
 import 'package:screenshot_desktop/screenshot_desktop.dart';
@@ -29,16 +32,36 @@ void main() async {
   // 1. Get available monitors
   final monitors = await ScreenshotDesktop.instance.getAvailableMonitors();
 
-  for (final monitor in monitors) {
-    print('Monitor: ${monitor.name} (${monitor.width}x${monitor.height})');
-  }
-
   if (monitors.isNotEmpty) {
     // 2. Capture a specific monitor
     final screenshot = await ScreenshotDesktop.instance.takeScreenshot(monitors.first);
 
     // 3. Save as a file (BMP)
-    await File('screenshot.bmp').writeAsBytes(screenshot);
+    await File('monitor_screenshot.bmp').writeAsBytes(screenshot);
+  }
+}
+```
+
+### Window Screenshot
+
+```dart
+import 'package:screenshot_desktop/screenshot_desktop.dart';
+import 'dart:io';
+
+void main() async {
+  // 1. Get available windows
+  final windows = await ScreenshotDesktop.instance.getAvailableWindows();
+
+  for (final window in windows) {
+    print('Window: ${window.title} (App: ${window.appName})');
+  }
+
+  if (windows.isNotEmpty) {
+    // 2. Capture a specific window
+    final screenshot = await ScreenshotDesktop.instance.takeWindowScreenshot(windows.first);
+
+    // 3. Save as a file (BMP)
+    await File('window_screenshot.bmp').writeAsBytes(screenshot);
   }
 }
 ```
