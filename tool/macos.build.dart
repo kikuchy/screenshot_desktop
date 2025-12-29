@@ -38,6 +38,8 @@ final config = FfiGenerator(
     interfaces: Interfaces.includeSet({
       // ScreenCaptureKit
       'SCDisplay',
+      'SCWindow',
+      'SCRunningApplication',
       'SCScreenshotManager',
       'SCShareableContent',
       'SCContentFilter',
@@ -45,6 +47,7 @@ final config = FfiGenerator(
       'SCScreenshotOutput',
       // AppKit
       'NSScreen',
+      'NSApplication',
       // UniformTypeIdentifiers
       'UTType',
     }),

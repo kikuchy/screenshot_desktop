@@ -59,6 +59,10 @@ void main(List<String> args) async {
         '-framework',
         'ScreenCaptureKit',
         '-framework',
+        'AppKit',
+        '-framework',
+        'CoreGraphics',
+        '-framework',
         'Foundation',
       ],
     ];

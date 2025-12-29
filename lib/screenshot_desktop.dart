@@ -5,6 +5,7 @@
 library;
 
 export 'src/monitor.dart';
+export 'src/desktop_window.dart';
 export 'src/screenshot_desktop_interface.dart';
 
 // TODO: Export any libraries intended for clients of this package.

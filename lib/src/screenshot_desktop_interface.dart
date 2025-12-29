@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:io';
 import 'monitor.dart';
+import 'desktop_window.dart';
 import 'macos/screenshot_desktop_macos.dart';
 import 'windows/screenshot_desktop_windows.dart';
 
@@ -46,4 +47,16 @@ abstract class ScreenshotDesktop {
   /// Throws a [StateError] if screen capture permission is missing, or an [ArgumentError]
   /// if the provided [monitor] is invalid for the current platform.
   Future<Uint8List> takeScreenshot(Monitor monitor);
+
+  /// Retrieves a list of all windows currently available on the system.
+  ///
+  /// Throws a [StateError] if screen capture permission has not been granted.
+  Future<List<DesktopWindow>> getAvailableWindows();
+
+  /// Takes a screenshot of the specified [window] and returns the image data.
+  ///
+  /// The returned [Uint8List] contains the raw BMP image data.
+  /// Throws a [StateError] if screen capture permission is missing, or an [ArgumentError]
+  /// if the provided [window] is invalid for the current platform.
+  Future<Uint8List> takeWindowScreenshot(DesktopWindow window);
 }
